@@ -1,0 +1,26 @@
+site_name: Tunnel
+plugins:
+  - search
+  - gen-files:
+      scripts:
+        - scripts/gen_ref_pages.py
+        - scripts/gen_readme_pages.py
+  - literate-nav:
+      nav_file: SUMMARY.md
+  - mkdocstrings:
+      handlers:
+        python:
+          paths: [src]
+          options:
+            show_source: false
+            members_order: source
+            separate_signature: true
+            show_signature_annotations: true
+            signature_crossrefs: true
+            annotations_path: full
+
+theme: readthedocs
+
+nav:
+  - README: README.md
+  - Reference: reference/
