@@ -1,0 +1,719 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+      <link rel="shortcut icon" href="../../img/favicon.ico" />
+    <title>tunnel - Tunnel</title>
+    <link rel="stylesheet" href="../../css/theme.css" />
+    <link rel="stylesheet" href="../../css/theme_extra.css" />
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github.min.css" />
+        <link href="../../assets/_mkdocstrings.css" rel="stylesheet" />
+    
+      <script>
+        // Current page data
+        var mkdocs_page_name = "tunnel";
+        var mkdocs_page_input_path = "reference\\tunnel.md";
+        var mkdocs_page_url = null;
+      </script>
+    
+    <!--[if lt IE 9]>
+      <script src="../../js/html5shiv.min.js"></script>
+    <![endif]-->
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js"></script>
+      <script>hljs.highlightAll();</script> 
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side stickynav">
+    <div class="wy-side-scroll">
+      <div class="wy-side-nav-search">
+          <a href="../.." class="icon icon-home"> Tunnel
+        </a><div role="search">
+  <form id ="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+      <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" title="Type search term here" />
+  </form>
+</div>
+      </div>
+
+      <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../..">README</a>
+                </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Reference</span></p>
+              <ul class="current">
+                  <li class="toctree-l1 current"><a class="reference internal current" href="./">tunnel</a>
+    <ul class="current">
+    </ul>
+                  </li>
+              </ul>
+      </div>
+    </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+      <nav class="wy-nav-top" role="navigation" aria-label="Mobile navigation menu">
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../..">Tunnel</a>
+        
+      </nav>
+      <div class="wy-nav-content">
+        <div class="rst-content"><div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="../.." class="icon icon-home" aria-label="Docs"></a></li>
+          <li class="breadcrumb-item">Reference</li>
+      <li class="breadcrumb-item active">tunnel</li>
+    <li class="wy-breadcrumbs-aside">
+    </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+            <div class="section" itemprop="articleBody">
+              
+                <div class="doc doc-object doc-module">
+
+
+
+<a id="tunnel"></a>
+  <div class="doc doc-contents first">
+
+  
+
+  <div class="doc doc-children">
+
+
+
+
+
+
+
+
+<div class="doc doc-object doc-class">
+
+
+
+<h2 id="tunnel.Tunnel" class="doc doc-heading">
+          <span class="doc doc-object-name doc-class-name">Tunnel</span>
+
+
+</h2>
+
+
+  <div class="doc doc-contents ">
+
+  
+      <p>Tunnel class for managing subprocess-based tunnels.</p>
+
+
+  
+
+  <div class="doc doc-children">
+
+
+
+
+
+
+
+
+
+
+<div class="doc doc-object doc-function">
+
+
+
+<h3 id="tunnel.Tunnel.__init__" class="doc doc-heading">
+          <span class="doc doc-object-name doc-function-name">__init__</span>
+
+
+</h3>
+<pre class="highlight"><code class="language-python doc-signature">__init__(
+    port: int,
+    *,
+    check_local_port: bool = True,
+    debug: bool = False,
+    timeout: int = 60
+)</code></pre>
+
+  <div class="doc doc-contents ">
+  
+      <p>Tunnel class for managing subprocess-based tunnels.</p>
+
+
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+      <th class="field-name">Parameters:</th>
+      <td class="field-body">
+        <ul class="first simple">
+            <li>
+              <b><code>port</code></b>
+                  (<code>int</code>)
+              –
+              <div class="doc-md-description">
+                <p>The local port on which the tunnels will be created.</p>
+              </div>
+            </li>
+            <li>
+              <b><code>check_local_port</code></b>
+                  (<code>bool</code>, default:
+                      <code>True</code>
+)
+              –
+              <div class="doc-md-description">
+                <p>Flag to check if the local port is available. Default True.</p>
+              </div>
+            </li>
+            <li>
+              <b><code>debug</code></b>
+                  (<code>bool</code>, default:
+                      <code>False</code>
+)
+              –
+              <div class="doc-md-description">
+                <p>Flag to enable debug mode for additional output. Default False.</p>
+              </div>
+            </li>
+            <li>
+              <b><code>timeout</code></b>
+                  (<code>int</code>, default:
+                      <code>60</code>
+)
+              –
+              <div class="doc-md-description">
+                <p>Maximum time to wait for the tunnels to start. Default 60.</p>
+              </div>
+            </li>
+        </ul>
+      </td>
+    </tr>
+  </tbody>
+</table>
+  </div>
+
+</div>
+
+
+<div class="doc doc-object doc-function">
+
+
+
+<h3 id="tunnel.Tunnel.with_tunnel_list" class="doc doc-heading">
+          <span class="doc doc-object-name doc-function-name">with_tunnel_list</span>
+
+  
+  <span class="doc doc-labels">
+      <small class="doc doc-label doc-label-classmethod"><code>classmethod</code></small>
+  </span>
+
+</h3>
+<pre class="highlight"><code class="language-python doc-signature">with_tunnel_list(
+    port: int,
+    tunnel_list: list[<a class="autorefs autorefs-internal" href="#tunnel">tunnel</a>.<span title="tunnel.TunnelDict">TunnelDict</span>],
+    *,
+    check_local_port: bool = True,
+    debug: bool = False,
+    timeout: int = 60
+)</code></pre>
+
+  <div class="doc doc-contents ">
+  
+      <p>Create a Tunnel instance with a pre-defined list of tunnels.</p>
+
+
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+      <th class="field-name">Parameters:</th>
+      <td class="field-body">
+        <ul class="first simple">
+            <li>
+              <b><code>port</code></b>
+                  (<code>int</code>)
+              –
+              <div class="doc-md-description">
+                <p>The local port on which the tunnels will be created.</p>
+              </div>
+            </li>
+            <li>
+              <b><code>tunnel_list</code></b>
+                  (<code>list[dict]</code>)
+              –
+              <div class="doc-md-description">
+                <p>List of dictionaries specifying tunnel configurations.
+Each dictionary must have the keys 'command', 'pattern', 'name', and 'note' (optional).</p>
+              </div>
+            </li>
+            <li>
+              <b><code>check_local_port</code></b>
+                  (<code>bool</code>, default:
+                      <code>True</code>
+)
+              –
+              <div class="doc-md-description">
+                <p>Flag to check if the local port is available. Default True.</p>
+              </div>
+            </li>
+            <li>
+              <b><code>debug</code></b>
+                  (<code>bool</code>, default:
+                      <code>False</code>
+)
+              –
+              <div class="doc-md-description">
+                <p>Flag to enable debug mode for additional output. Default False.</p>
+              </div>
+            </li>
+            <li>
+              <b><code>timeout</code></b>
+                  (<code>int</code>, default:
+                      <code>60</code>
+)
+              –
+              <div class="doc-md-description">
+                <p>Maximum time to wait for the tunnels to start. Default 60.</p>
+              </div>
+            </li>
+        </ul>
+      </td>
+    </tr>
+  </tbody>
+</table>
+  </div>
+
+</div>
+
+
+<div class="doc doc-object doc-function">
+
+
+
+<h3 id="tunnel.Tunnel.add_tunnel" class="doc doc-heading">
+          <span class="doc doc-object-name doc-function-name">add_tunnel</span>
+
+
+</h3>
+<pre class="highlight"><code class="language-python doc-signature">add_tunnel(
+    *,
+    command: str,
+    pattern: re.<span title="re.Pattern">Pattern</span> | str,
+    name: str,
+    note: typing.<span title="typing.Optional">Optional</span>[str] = None
+)</code></pre>
+
+  <div class="doc doc-contents ">
+  
+      <p>Add a tunnel.</p>
+
+
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+      <th class="field-name">Parameters:</th>
+      <td class="field-body">
+        <ul class="first simple">
+            <li>
+              <b><code>command</code></b>
+                  (<code>str</code>)
+              –
+              <div class="doc-md-description">
+                <p>The command to execute for the tunnel.</p>
+              </div>
+            </li>
+            <li>
+              <b><code>pattern</code></b>
+                  (<code>re.<span title="re.Pattern">Pattern</span> | str</code>)
+              –
+              <div class="doc-md-description">
+                <p>A regular expression pattern to match the tunnel URL.</p>
+              </div>
+            </li>
+            <li>
+              <b><code>name</code></b>
+                  (<code>str</code>)
+              –
+              <div class="doc-md-description">
+                <p>The name of the tunnel.</p>
+              </div>
+            </li>
+            <li>
+              <b><code>note</code></b>
+                  (<code>typing.<span title="typing.Optional">Optional</span>[str]</code>, default:
+                      <code>None</code>
+)
+              –
+              <div class="doc-md-description">
+                <p>A note about the tunnel.</p>
+              </div>
+            </li>
+        </ul>
+      </td>
+    </tr>
+  </tbody>
+</table>
+  </div>
+
+</div>
+
+
+<div class="doc doc-object doc-function">
+
+
+
+<h3 id="tunnel.Tunnel.start" class="doc doc-heading">
+          <span class="doc doc-object-name doc-function-name">start</span>
+
+
+</h3>
+<pre class="highlight"><code class="language-python doc-signature">start()</code></pre>
+
+  <div class="doc doc-contents ">
+  
+      <p>Start the tunnel and wait for the URLs to be printed.</p>
+
+
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+      <th class="field-name">Raises:</th>
+      <td class="field-body">
+        <ul class="first simple">
+            <li>
+                  <code>RuntimeError</code>
+              –
+              <div class="doc-md-description">
+                <p>Raise if tunnel is already running</p>
+              </div>
+            </li>
+        </ul>
+      </td>
+    </tr>
+  </tbody>
+</table>
+  </div>
+
+</div>
+
+
+<div class="doc doc-object doc-function">
+
+
+
+<h3 id="tunnel.Tunnel.stop" class="doc doc-heading">
+          <span class="doc doc-object-name doc-function-name">stop</span>
+
+
+</h3>
+<pre class="highlight"><code class="language-python doc-signature">stop()</code></pre>
+
+  <div class="doc doc-contents ">
+  
+      <p>Stop the tunnel and reset internal state.</p>
+
+
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+      <th class="field-name">Raises:</th>
+      <td class="field-body">
+        <ul class="first simple">
+            <li>
+                  <code>RuntimeError</code>
+              –
+              <div class="doc-md-description">
+                <p>Raise if tunnel is not running</p>
+              </div>
+            </li>
+        </ul>
+      </td>
+    </tr>
+  </tbody>
+</table>
+  </div>
+
+</div>
+
+
+<div class="doc doc-object doc-function">
+
+
+
+<h3 id="tunnel.Tunnel.reset" class="doc doc-heading">
+          <span class="doc doc-object-name doc-function-name">reset</span>
+
+
+</h3>
+<pre class="highlight"><code class="language-python doc-signature">reset()</code></pre>
+
+  <div class="doc doc-contents ">
+  
+      <p>Reset internal state.</p>
+
+  </div>
+
+</div>
+
+
+<div class="doc doc-object doc-function">
+
+
+
+<h3 id="tunnel.Tunnel.is_port_available" class="doc doc-heading">
+          <span class="doc doc-object-name doc-function-name">is_port_available</span>
+
+  
+  <span class="doc doc-labels">
+      <small class="doc doc-label doc-label-staticmethod"><code>staticmethod</code></small>
+  </span>
+
+</h3>
+<pre class="highlight"><code class="language-python doc-signature">is_port_available(port: int) -&gt; bool</code></pre>
+
+  <div class="doc doc-contents ">
+  
+      <p>Check if the specified port is available.</p>
+
+
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+      <th class="field-name">Parameters:</th>
+      <td class="field-body">
+        <ul class="first simple">
+            <li>
+              <b><code>port</code></b>
+                  (<code>int</code>)
+              –
+              <div class="doc-md-description">
+                <p>The port to check.</p>
+              </div>
+            </li>
+        </ul>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+    <th class="field-name">Returns:</th>
+    <td class="field-body">
+      <ul class="first simple">
+          <li>
+<b><code>bool</code></b>(                <code>bool</code>
+)            –
+            <div class="doc-md-description">
+              <p>True if the port is available, False otherwise.</p>
+            </div>
+          </li>
+      </ul>
+    </td>
+    </tr>
+  </tbody>
+</table>
+  </div>
+
+</div>
+
+
+<div class="doc doc-object doc-function">
+
+
+
+<h3 id="tunnel.Tunnel.wait_for_condition" class="doc doc-heading">
+          <span class="doc doc-object-name doc-function-name">wait_for_condition</span>
+
+  
+  <span class="doc doc-labels">
+      <small class="doc doc-label doc-label-staticmethod"><code>staticmethod</code></small>
+  </span>
+
+</h3>
+<pre class="highlight"><code class="language-python doc-signature">wait_for_condition(
+    condition: typing.<span title="typing.Callable">Callable</span>[[], bool],
+    *,
+    interval: int = 1,
+    timeout: int = None
+) -&gt; bool</code></pre>
+
+  <div class="doc doc-contents ">
+  
+      <p>Wait for the condition to be true until the specified timeout.</p>
+<p>Mostly for internal use but you can use it for anything else.</p>
+
+
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+      <th class="field-name">Parameters:</th>
+      <td class="field-body">
+        <ul class="first simple">
+            <li>
+              <b><code>condition</code></b>
+                  (<code>typing.<span title="typing.Callable">Callable</span>[[], bool]</code>)
+              –
+              <div class="doc-md-description">
+                <p>The condition to check.</p>
+              </div>
+            </li>
+            <li>
+              <b><code>interval</code></b>
+                  (<code>int</code>, default:
+                      <code>1</code>
+)
+              –
+              <div class="doc-md-description">
+                <p>The interval (in seconds) between condition checks.</p>
+              </div>
+            </li>
+            <li>
+              <b><code>timeout</code></b>
+                  (<code>int</code>, default:
+                      <code>None</code>
+)
+              –
+              <div class="doc-md-description">
+                <p>Maximum time to wait for the condition. None for no timeout.</p>
+              </div>
+            </li>
+        </ul>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+    <th class="field-name">Returns:</th>
+    <td class="field-body">
+      <ul class="first simple">
+          <li>
+<b><code>bool</code></b>(                <code>bool</code>
+)            –
+            <div class="doc-md-description">
+              <p>True if the condition is met, False if timeout is reached.</p>
+            </div>
+          </li>
+      </ul>
+    </td>
+    </tr>
+  </tbody>
+</table>
+  </div>
+
+</div>
+
+
+
+  </div>
+
+  </div>
+
+
+</div>
+
+
+
+
+  </div>
+
+  </div>
+
+</div>
+              
+            </div>
+          </div><footer>
+    <div class="rst-footer-buttons" role="navigation" aria-label="Footer Navigation">
+        <a href="../.." class="btn btn-neutral float-left" title="README"><span class="icon icon-circle-arrow-left"></span> Previous</a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <!-- Copyright etc -->
+  </div>
+
+  Built with <a href="https://www.mkdocs.org/">MkDocs</a> using a <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
+</footer>
+          
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+
+  <div class="rst-versions" role="note" aria-label="Versions">
+  <span class="rst-current-version" data-toggle="rst-current-version">
+    
+    
+      <span><a href="../.." style="color: #fcfcfc">&laquo; Previous</a></span>
+    
+    
+  </span>
+</div>
+    <script src="../../js/jquery-3.6.0.min.js"></script>
+    <script>var base_url = "../..";</script>
+    <script src="../../js/theme_extra.js"></script>
+    <script src="../../js/theme.js"></script>
+      <script src="../../search/main.js"></script>
+    <script>
+        jQuery(function () {
+            SphinxRtdTheme.Navigation.enable(true);
+        });
+    </script>
+
+</body>
+</html>
