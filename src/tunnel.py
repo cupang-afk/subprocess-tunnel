@@ -67,6 +67,7 @@ class Tunnel:
 
         self.logger = logging.getLogger("Tunnel")
         self.logger.setLevel(logging.DEBUG)
+        self.logger.propagate = False
         for handler in self.logger.handlers:
             self.logger.removeHandler(handler)
         handler = logging.StreamHandler()
