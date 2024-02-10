@@ -320,6 +320,15 @@ class Tunnel:
         log.addHandler(handler)
 
         try:
+            if self.check_local_port:
+                # Wait until the port is available or stop_event is set
+                log.debug(
+                    f"Wait until port: {self.port} online before running the command for {name}"
+                )
+                self.wait_for_condition(
+                    lambda: self.is_port_available(self.port) or self.stop_event.is_set(),
+                    interval=1,
+                )
             if not os.name == "nt":
                 cmd = shlex.split(cmd)
             process = subprocess.Popen(
