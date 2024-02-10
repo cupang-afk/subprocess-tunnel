@@ -2,7 +2,13 @@
 
 This Python package provides a convenient wrapper for running tunnel commands.
 
+## Documentation
+
+Documentation are located [here](https://cupang-afk.github.io/subprocess-tunnel/)
+
 ## Usage
+
+This is not a module, instead, you can just download [tunnel.py](https://github.com/cupang-afk/subprocess-tunnel/blob/master/src/tunnel.py) and import it
 
 ```python
 from tunnel import Tunnel
@@ -42,3 +48,11 @@ wrapper = Tunnel.with_tunnel_list(3000, tunnel_list)
 
 wrapper.start()
 ```
+
+## TODO
+
+- [ ] -
+
+---
+
+Licensed under the terms of the MIT License. See the [LICENSE](https://github.com/cupang-afk/subprocess-tunnel/blob/master/LICENSE) file for details.
