@@ -1,3 +1,9 @@
+## 0.0.3 (2024-02-10)
+
+### Refactor
+
+- **build**: change --no-test to --with-test, and default to False (building things required testing but "build" in this case is just for pickling, so no need to test unless it set)
+
 ## 0.0.2 (2024-02-10)
 
 ### Fix
