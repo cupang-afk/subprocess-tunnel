@@ -31,10 +31,10 @@ if args.with_test:
     import importlib.util
 
     if not importlib.util.find_spec("pytest"):
-        print("pytest not found, install it first or run with --no-test")
+        print("pytest not found, install it first or run without --with-test")
         sys.exit(1)
     if not importlib.util.find_spec("pytest_mock"):
-        print("pytest-mock not found, install it first or run with --no-test")
+        print("pytest-mock not found, install it first or run without --with-test")
         sys.exit(1)
 
     try:
@@ -48,7 +48,7 @@ with tempfile.TemporaryDirectory() as tmp_dir:
     import importlib.util
 
     if not importlib.util.find_spec("cloudpickle"):
-        print("cloudpickle not found, install it first or run with --no-test")
+        print("cloudpickle not found, install it first or run without --with-test")
         sys.exit(1)
 
     tmp_dir = Path(tmp_dir)
