@@ -130,7 +130,7 @@ def test__process_line():
 
 
 @pytest.mark.parametrize(
-    "wait_condition, check_local_port, expected_info_calls, expected_warning_called",
+    "wait_condition, check_local_port, expected_info_calls, expected_warning_calls",
     [
         (
             True,
@@ -140,7 +140,7 @@ def test__process_line():
                 "Wait until port: 3000 online before print URLs",
                 "* Running on: http://example.com",
             ],
-            None,
+            [],
         ),
         (
             False,
@@ -159,7 +159,7 @@ def test__process_line():
                 "Getting URLs",
                 "* Running on: http://example.com",
             ],
-            None,
+            [],
         ),
         (
             False,
@@ -177,7 +177,7 @@ def test__print(
     wait_condition,
     check_local_port,
     expected_info_calls,
-    expected_warning_called,
+    expected_warning_calls,
     mocker: MockerFixture,
 ):
     mock_logger = mocker.MagicMock()
@@ -191,6 +191,10 @@ def test__print(
     tunnel._print()
 
     mock_logger.info.assert_has_calls([mocker.call(c) for c in expected_info_calls])
+    if wait_condition is False:
+        mock_logger.warning.assert_has_calls([mocker.call(c) for c in expected_warning_calls])
+
+
 @pytest.mark.parametrize(
     "wait_condition, check_local_port, expected_debug_calls",
     [
