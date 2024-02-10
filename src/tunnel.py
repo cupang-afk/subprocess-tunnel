@@ -149,12 +149,16 @@ class Tunnel:
         log = self.logger
         self.__enter__()
 
+        _check_local_port = self.check_local_port
+        self.check_local_port = False
         try:
             while not self.printed.is_set():
                 time.sleep(1)
         except KeyboardInterrupt:
             log.warning("Keyboard Interrupt detected, stopping tunnel")
             self.stop()
+        finally:
+            self.check_local_port = _check_local_port
 
     def stop(self):
         """
