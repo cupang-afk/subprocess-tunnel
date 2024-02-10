@@ -62,9 +62,10 @@ with tempfile.TemporaryDirectory() as tmp_dir:
                 textwrap.dedent(
                     f"""
                     import cloudpickle as p
-                    from tunnel import Tunnel as T
+                    import tunnel
+                    p.register_pickle_by_value(tunnel)
                     with open("{tunnel.with_suffix('.pkl').name}", "wb") as f:
-                        f.write(p.dumps(T))
+                        f.write(p.dumps(tunnel.Tunnel))
                     """
                 ),
             ]
