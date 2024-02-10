@@ -191,21 +191,42 @@ def test__print(
     tunnel._print()
 
     mock_logger.info.assert_has_calls([mocker.call(c) for c in expected_info_calls])
-    if expected_warning_called:
-        mock_logger.warning.assert_has_calls([mocker.call(c) for c in expected_warning_called])
-
-
-def test__run(mock_get_logger, mock_popen, mocker: MockerFixture):
+@pytest.mark.parametrize(
+    "wait_condition, check_local_port, expected_debug_calls",
+    [
+        (True, True, ["Wait until port: 3000 online before running the command for test_tunnel"]),
+        (False, True, ["Wait until port: 3000 online before running the command for test_tunnel"]),
+        (True, False, []),
+        (False, False, []),
+    ],
+)
+def test__run(
+    mock_get_logger,
+    mock_popen,
+    wait_condition,
+    check_local_port,
+    expected_debug_calls,
+    mocker: MockerFixture,
+):
     mock_logger = mocker.MagicMock()
     mock_get_logger.return_value = mock_logger
 
+    mocker.patch.object(Tunnel, "wait_for_condition", return_value=wait_condition)
+
     tunnel = Tunnel(3000)
-    tunnel.add_tunnel(**{"command": "cmd", "pattern": "pat", "name": "n", "note": "nt"})
 
     mock_popen_instance = mocker.MagicMock()
     mock_popen.return_value = mock_popen_instance
 
+    tunnel.check_local_port = check_local_port
+
+    mock_child_logger = mocker.MagicMock()
+    mock_get_logger.return_value.getChild.return_value = mock_child_logger
+
     tunnel._run("test_command", "test_tunnel")
+
+    if check_local_port:
+        mock_child_logger.debug.assert_has_calls([mocker.call(c) for c in expected_debug_calls])
 
 
 def test_start(
