@@ -150,7 +150,7 @@ def test__process_line():
                 "Wait until port: 3000 online before print URLs",
                 "* Running on: http://example.com",
             ],
-            2,
+            ["Timeout while getting tunnel URLs, print available URLs"],
         ),
         (
             True,
@@ -168,7 +168,7 @@ def test__process_line():
                 "Getting URLs",
                 "* Running on: http://example.com",
             ],
-            2,
+            ["Timeout while getting tunnel URLs, print available URLs"],
         ),
     ],
 )
@@ -192,9 +192,7 @@ def test__print(
 
     mock_logger.info.assert_has_calls([mocker.call(c) for c in expected_info_calls])
     if expected_warning_called:
-        mock_logger.warning.assert_called_with(
-            "Timeout while getting tunnel URLs, print available URLs"
-        )
+        mock_logger.warning.assert_has_calls([mocker.call(c) for c in expected_warning_called])
 
 
 def test__run(mock_get_logger, mock_popen, mocker: MockerFixture):
