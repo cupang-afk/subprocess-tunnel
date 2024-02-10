@@ -9,7 +9,7 @@ import textwrap
 from pathlib import Path
 
 parser = argparse.ArgumentParser()
-parser.add_argument("--no-test", dest="no_test", action="store_true", default=False)
+parser.add_argument("--with-test", dest="with_test", action="store_true", default=False)
 args = parser.parse_args()
 
 cwd = Path.cwd()
@@ -26,7 +26,7 @@ def workdir(dir: str):
         os.chdir(_cwd)
 
 
-if not args.no_test:
+if args.with_test:
     print("Run Test")
     import importlib.util
 
