@@ -5,6 +5,7 @@ import shutil
 import subprocess
 import sys
 import tempfile
+import textwrap
 from pathlib import Path
 
 parser = argparse.ArgumentParser()
@@ -54,6 +55,19 @@ with tempfile.TemporaryDirectory() as tmp_dir:
     tunnel_pkl = tunnel.with_suffix(".pkl")
     shutil.copy(tunnel.absolute(), tmp_dir)
     with workdir(tmp_dir):
-        subprocess.run([sys.executable, tunnel.name])
+        subprocess.run(
+            [
+                sys.executable,
+                "-c",
+                textwrap.dedent(
+                    f"""
+                    import cloudpickle as p
+                    from tunnel import Tunnel as T
+                    with open("{tunnel.with_suffix('.pkl').name}", "wb") as f:
+                        f.write(p.dumps(T))
+                    """
+                ),
+            ]
+        )
     print(f"Copy {tmp_dir / tunnel_pkl.name} to {cwd / tunnel_pkl.name}")
     shutil.copy(tmp_dir / tunnel_pkl.name, cwd / tunnel_pkl.name)

@@ -374,10 +374,3 @@ class Tunnel:
             for url in self.urls:
                 log.info(f"* Running on: {url}")
             self.printed.set()
-
-
-if __name__ == "__main__":
-    import cloudpickle as pickle
-
-    with Path(__file__).with_suffix(".pkl").open("wb") as f:
-        f.write(pickle.dumps(Tunnel))
