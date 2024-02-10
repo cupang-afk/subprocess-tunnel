@@ -574,13 +574,13 @@ Each dictionary must have the keys 'command', 'pattern', 'name', and 'note' (opt
     condition: typing.<span title="typing.Callable">Callable</span>[[], bool],
     *,
     interval: int = 1,
-    timeout: int = None
+    timeout: int | None = 10
 ) -&gt; bool</code></pre>
 
   <div class="doc doc-contents ">
   
       <p>Wait for the condition to be true until the specified timeout.</p>
-<p>Mostly for internal use but you can use it for anything else.</p>
+<p>Mostly for internal use but can be used for anything else.</p>
 
 
 
@@ -615,7 +615,7 @@ Each dictionary must have the keys 'command', 'pattern', 'name', and 'note' (opt
             <li>
               <b><code>timeout</code></b>
                   (<code>int</code>, default:
-                      <code>None</code>
+                      <code>10</code>
 )
               –
               <div class="doc-md-description">
