@@ -249,12 +249,12 @@ class Tunnel:
 
     @staticmethod
     def wait_for_condition(
-        condition: Callable[[], bool], *, interval: int = 1, timeout: int = None
+        condition: Callable[[], bool], *, interval: int = 1, timeout: int | None = 10
     ) -> bool:
         """
         Wait for the condition to be true until the specified timeout.
 
-        Mostly for internal use but you can use it for anything else.
+        Mostly for internal use but can be used for anything else.
 
         Args:
             condition (Callable[[], bool]): The condition to check.
@@ -266,18 +266,35 @@ class Tunnel:
         """
         start_time = time.time()
 
-        if isinstance(interval, float):
-            # round up without import anything
-            # https://stackoverflow.com/a/35125872
-            interval = -(-interval // 1)
-        if interval < 1:
-            interval = 1
-        while not condition():
-            if timeout is not None and time.time() - start_time > timeout:
-                return False
-            time.sleep(interval)
+        # Initialize variables to track elapsed time and number of checks
+        elapsed_time = 0
+        checks_count = 0
 
-        return True
+        # Prevent zero or negative timeout
+        if timeout is not None:
+            timeout = max(1, timeout)
+
+        while True:
+            if condition():
+                return True
+
+            checks_count += 1
+
+            if timeout is not None:
+                elapsed_time = time.time() - start_time
+                remaining_time = timeout - elapsed_time
+
+                # If remaining time is non-positive, return False (timeout occurred)
+                if remaining_time <= 0:
+                    return False
+
+                # Adjust the interval to respect the remaining time
+                # and distribute it evenly among the remaining checks
+                next_interval = min(interval, remaining_time / (checks_count + 1))
+            else:
+                next_interval = interval
+
+            time.sleep(next_interval)
 
     def _process_line(self, line: str) -> bool:
         """
@@ -328,6 +345,7 @@ class Tunnel:
                 self.wait_for_condition(
                     lambda: self.is_port_available(self.port) or self.stop_event.is_set(),
                     interval=1,
+                    timeout=None,
                 )
             if not os.name == "nt":
                 cmd = shlex.split(cmd)
@@ -368,6 +386,7 @@ class Tunnel:
             self.wait_for_condition(
                 lambda: self.is_port_available(self.port) or self.stop_event.is_set(),
                 interval=1,
+                timeout=None,
             )
 
         # Wait until all URLs are available or stop_event is set
