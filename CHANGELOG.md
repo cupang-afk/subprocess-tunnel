@@ -1,3 +1,9 @@
+## 0.0.4 (2024-02-10)
+
+### Perf
+
+- **Tunnel.wait_for_condition**: improve wait_for_condition to wait until exact timeout 
+
 ## 0.0.3 (2024-02-10)
 
 ### Refactor
