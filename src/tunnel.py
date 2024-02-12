@@ -2,6 +2,7 @@ import logging
 import os
 import re
 import shlex
+import signal
 import socket
 import subprocess
 import time
@@ -175,14 +176,18 @@ class Tunnel:
         self.stop_event.set()
 
         for process in self.processes:
-            process.terminate()
-
-            # If the process was a script and has leftovers
-            # (e.g., on Windows when running a .cmd file)
-            if process.stdin is not None:
-                process.stdin.write(os.linesep)
+            log.debug(f"Stopping {process}")
+            while process.poll() is None:
+                try:
+                    process.communicate(timeout=15)
+                except subprocess.TimeoutExpired:
+                    process.send_signal(signal.CTRL_BREAK_EVENT)
+                    process.send_signal(signal.CTRL_C_EVENT)
+                    process.kill()
+            process.communicate()
 
         for job in self.jobs:
+            log.debug(f"Join thread {job}")
             job.join()
 
         self.reset()
@@ -354,6 +359,7 @@ class Tunnel:
                 stderr=subprocess.STDOUT,
                 stdin=subprocess.PIPE,
                 universal_newlines=True,
+                creationflags=subprocess.CREATE_NEW_PROCESS_GROUP if os.name == "nt" else 0,
             )
             self.processes.append(process)
 
