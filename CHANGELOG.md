@@ -1,3 +1,16 @@
+## 0.0.5 (2024-02-13)
+
+### Fix
+
+- **Tunnel.stop**: fix tunnel won't stopping
+- **Tunnel.start**: move check_local_port above the run (i forgot lol, now it work as expected)
+
+### Refactor
+
+- **logger**: by default when invoke logging.getLogger we have empty handler, so we don't need to remove the handler (getChild also apply)
+- **build**: change message from --no-test to --with-test
+- **build**: fix ModuleNotFoundError: No module named 'tunnel' when loading pickle file from build_tunnel.py
+
 ## 0.0.4 (2024-02-10)
 
 ### Perf
