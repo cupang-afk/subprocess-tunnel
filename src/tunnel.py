@@ -68,14 +68,13 @@ class Tunnel:
         self.logger = logging.getLogger("Tunnel")
         self.logger.setLevel(logging.DEBUG)
         self.logger.propagate = False
-        for handler in self.logger.handlers:
-            self.logger.removeHandler(handler)
-        handler = logging.StreamHandler()
-        handler.setLevel(logging.DEBUG if debug else logging.INFO)
-        handler.setFormatter(
-            CustomLogFormat("[{asctime} {levelname}]: {message}", datefmt="%X", style="{")
-        )
-        self.logger.addHandler(handler)
+        if not self.logger.handlers:
+            handler = logging.StreamHandler()
+            handler.setLevel(logging.DEBUG if debug else logging.INFO)
+            handler.setFormatter(
+                CustomLogFormat("[{asctime} {levelname}]: {message}", datefmt="%X", style="{")
+            )
+            self.logger.addHandler(handler)
 
     @classmethod
     def with_tunnel_list(
@@ -331,11 +330,10 @@ class Tunnel:
 
         # setup command logger
         log = self.logger.getChild(name)
-        for handler in log.handlers:
-            log.removeHandler(handler)
-        handler = logging.FileHandler(log_path, encoding="utf-8")
-        handler.setLevel(logging.DEBUG)
-        log.addHandler(handler)
+        if not log.handlers:
+            handler = logging.FileHandler(log_path, encoding="utf-8")
+            handler.setLevel(logging.DEBUG)
+            log.addHandler(handler)
 
         try:
             if self.check_local_port:
@@ -372,7 +370,8 @@ class Tunnel:
         except Exception:
             log.error(f"An error occurred while running the command: {cmd}", exc_info=True)
         finally:
-            handler.close()
+            for handler in log.handlers:
+                handler.close()
 
     def _print(self) -> None:
         """
