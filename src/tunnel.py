@@ -146,11 +146,12 @@ class Tunnel:
         if self._is_running:
             raise RuntimeError("Tunnel is already running")
 
+        _check_local_port = self.check_local_port
+        self.check_local_port = False
+
         log = self.logger
         self.__enter__()
 
-        _check_local_port = self.check_local_port
-        self.check_local_port = False
         try:
             while not self.printed.is_set():
                 time.sleep(1)
