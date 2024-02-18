@@ -183,8 +183,9 @@ class Tunnel:
                 try:
                     process.communicate(timeout=15)
                 except subprocess.TimeoutExpired:
-                    process.send_signal(signal.CTRL_BREAK_EVENT)
-                    process.send_signal(signal.CTRL_C_EVENT)
+                    if self.WINDOWS:
+                        process.send_signal(signal.CTRL_BREAK_EVENT)
+                        process.send_signal(signal.CTRL_C_EVENT)
                     process.kill()
             process.communicate()
 
