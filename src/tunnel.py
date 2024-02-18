@@ -77,6 +77,8 @@ class Tunnel:
             )
             self.logger.addHandler(handler)
 
+        self.WINDOWS = True if os.name == "nt" else False
+
     @classmethod
     def with_tunnel_list(
         cls,
@@ -351,7 +353,7 @@ class Tunnel:
                     interval=1,
                     timeout=None,
                 )
-            if not os.name == "nt":
+            if not self.WINDOWS:
                 cmd = shlex.split(cmd)
             process = subprocess.Popen(
                 cmd,
@@ -359,7 +361,7 @@ class Tunnel:
                 stderr=subprocess.STDOUT,
                 stdin=subprocess.PIPE,
                 universal_newlines=True,
-                creationflags=subprocess.CREATE_NEW_PROCESS_GROUP if os.name == "nt" else 0,
+                creationflags=subprocess.CREATE_NEW_PROCESS_GROUP if self.WINDOWS else 0,
             )
             self.processes.append(process)
 
