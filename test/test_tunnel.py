@@ -42,13 +42,21 @@ def mock_popen(mocker: MockerFixture):
     return mocker.patch("src.tunnel.subprocess.Popen")
 
 
-@pytest.mark.parametrize("debug", [True, False])
+@pytest.mark.parametrize(
+    "debug, handlers",
+    [
+        (True, []),
+        (False, ["handler"]),
+    ],
+)
 def test_initialize_tunnel_class(
-    mock_get_logger, mock_stream_handler, debug, mocker: MockerFixture
+    mock_get_logger, mock_stream_handler, debug, handlers, mocker: MockerFixture
 ):
     # Mock getLogger method to return MagicMock object
     mock_logger = mocker.MagicMock()
     mock_get_logger.return_value = mock_logger
+    mock_handlers = mock_logger.handlers
+    mock_handlers.return_value = handlers
 
     # Mock the StreamHandler class
     mock_handler_instance = mocker.MagicMock()
@@ -60,8 +68,11 @@ def test_initialize_tunnel_class(
     # Assertions
     mock_get_logger.assert_called_with("Tunnel")
     assert tunnel.logger == mock_logger
-    mock_logger.addHandler.assert_called_once_with(mock_handler_instance)
-    mock_handler_instance.setLevel.assert_called_once_with(logging.DEBUG if debug else logging.INFO)
+    if not mock_handlers:
+        mock_logger.addHandler.assert_called_once_with(mock_handler_instance)
+        mock_handler_instance.setLevel.assert_called_once_with(
+            logging.DEBUG if debug else logging.INFO
+        )
 
 
 def test_with_tunnel_list():
