@@ -53,6 +53,14 @@ wrapper.start()
 
 - [ ] -
 
+## Personal Note
+
+well, in 23 Feb 2024, i accidentaly force push to the repo which overwrite the date of the commit
+
+but the project still work, so whatever
+
+for the future me, **DO NOT USE `git push -f`** for whatever reason
+
 ---
 
 Licensed under the terms of the MIT License. See the [LICENSE](https://github.com/cupang-afk/subprocess-tunnel/blob/master/LICENSE) file for details.
