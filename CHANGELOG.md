@@ -1,3 +1,17 @@
+## 0.0.6 (2024-02-23)
+
+### Fix
+
+- **Tunnel.stop**: fix AttributeError: module 'signal' has no attribute 'CTRL_BREAK_EVENT' on linux (and possibly CTRL_C_EVENT)
+
+### Refactor
+
+- add var for Windows checking
+
+### Perf
+
+- **Tunnel._run**: use bufsize=1 to buff per line
+
 ## 0.0.5 (2024-02-13)
 
 ### Fix
