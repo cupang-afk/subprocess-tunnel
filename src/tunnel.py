@@ -362,6 +362,7 @@ class Tunnel:
                 stderr=subprocess.STDOUT,
                 stdin=subprocess.PIPE,
                 universal_newlines=True,
+                bufsize=1,
                 creationflags=subprocess.CREATE_NEW_PROCESS_GROUP if self.WINDOWS else 0,
             )
             self.processes.append(process)
