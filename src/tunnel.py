@@ -250,9 +250,11 @@ class Tunnel:
             bool: True if the port is available, False otherwise.
         """
         try:
-            with socket.create_connection(("127.0.0.1", port), timeout=1):
-                return True
-        except (socket.timeout, ConnectionRefusedError):
+            with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
+                s.settimeout(1)
+                # equal to 0 meaning there is an app that use it
+                return s.connect_ex(("localhost", port)) != 0
+        except OSError:
             return False
 
     @staticmethod
@@ -350,7 +352,7 @@ class Tunnel:
                     f"Wait until port: {self.port} online before running the command for {name}"
                 )
                 self.wait_for_condition(
-                    lambda: self.is_port_available(self.port) or self.stop_event.is_set(),
+                    lambda: not self.is_port_available(self.port) or self.stop_event.is_set(),
                     interval=1,
                     timeout=None,
                 )
@@ -394,7 +396,7 @@ class Tunnel:
             # Wait until the port is available or stop_event is set
             log.info(f"Wait until port: {self.port} online before print URLs")
             self.wait_for_condition(
-                lambda: self.is_port_available(self.port) or self.stop_event.is_set(),
+                lambda: not self.is_port_available(self.port) or self.stop_event.is_set(),
                 interval=1,
                 timeout=None,
             )

@@ -18,8 +18,8 @@ def mock_stream_handler(mocker: MockerFixture):
 
 
 @pytest.fixture
-def mock_socket_create_connection(mocker: MockerFixture):
-    return mocker.patch("src.tunnel.socket.create_connection")
+def mock_socket(mocker):
+    return mocker.patch("src.tunnel.socket.socket")
 
 
 @pytest.fixture
@@ -120,8 +120,16 @@ def test_reset():
     assert not tunnel._is_running
 
 
-def test_is_port_available(mock_socket_create_connection):
+def test_is_port_available(mock_socket):
+    mock_sock_instance = mock_socket.return_value.__enter__.return_value
+    mock_sock_instance.connect_ex.return_value = 1
     assert Tunnel.is_port_available(3000)
+
+    mock_sock_instance.connect_ex.return_value = 0
+    assert not Tunnel.is_port_available(3000)
+
+    mock_sock_instance.connect_ex.bind.side_effect = OSError
+    assert not Tunnel.is_port_available(3000)
 
 
 @pytest.mark.parametrize("result", [True, False])
