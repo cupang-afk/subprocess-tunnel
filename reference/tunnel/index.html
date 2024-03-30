@@ -110,41 +110,6 @@
       <p>Tunnel class for managing subprocess-based tunnels.</p>
 
 
-  
-
-  <div class="doc doc-children">
-
-
-
-
-
-
-
-
-
-
-<div class="doc doc-object doc-function">
-
-
-
-<h3 id="tunnel.Tunnel.__init__" class="doc doc-heading">
-          <span class="doc doc-object-name doc-function-name">__init__</span>
-
-
-</h3>
-<pre class="highlight"><code class="language-python doc-signature">__init__(
-    port: int,
-    *,
-    check_local_port: bool = True,
-    debug: bool = False,
-    timeout: int = 60
-)</code></pre>
-
-  <div class="doc doc-contents ">
-  
-      <p>Tunnel class for managing subprocess-based tunnels.</p>
-
-
 
 <table class="field-list">
   <colgroup>
@@ -194,14 +159,53 @@
                 <p>Maximum time to wait for the tunnels to start. Default 60.</p>
               </div>
             </li>
+            <li>
+              <b><code>propagate</code></b>
+                  (<code>bool</code>, default:
+                      <code>False</code>
+)
+              –
+              <div class="doc-md-description">
+                <p>Flag to propagate log messages to the root logger,             if False will create custom log format to print log. Default False.</p>
+              </div>
+            </li>
+            <li>
+              <b><code>log_dir</code></b>
+                  (<code>os.<span title="os.PathLike">PathLike</span></code>, default:
+                      <code>os.<span title="os.getcwd">getcwd</span>()</code>
+)
+              –
+              <div class="doc-md-description">
+                <p>Directory to store log files. Default os.getcwd().</p>
+              </div>
+            </li>
+            <li>
+              <b><code>callback</code></b>
+                  (<code>typing.<span title="typing.Callable">Callable</span>[[list[tuple[str, str | None]]], None]</code>, default:
+                      <code>None</code>
+)
+              –
+              <div class="doc-md-description">
+                <p>A callback function to be called when Tunnel URL is printed.            <code>callback([(url1, note1), (url2, note2), ...]) -&gt; None</code></p>
+              </div>
+            </li>
         </ul>
       </td>
     </tr>
   </tbody>
 </table>
-  </div>
 
-</div>
+  
+
+  <div class="doc doc-children">
+
+
+
+
+
+
+
+
 
 
 <div class="doc doc-object doc-function">
@@ -217,14 +221,15 @@
   </span>
 
 </h3>
-<pre class="highlight"><code class="language-python doc-signature">with_tunnel_list(
-    port: int,
-    tunnel_list: list[<a class="autorefs autorefs-internal" href="#tunnel">tunnel</a>.<span title="tunnel.TunnelDict">TunnelDict</span>],
-    *,
-    check_local_port: bool = True,
-    debug: bool = False,
-    timeout: int = 60
-)</code></pre>
+<div class="doc-signature highlight"><pre><span></span><code><span class="n">with_tunnel_list</span><span class="p">(</span>
+    <span class="n">port</span><span class="p">:</span> <span class="n">int</span><span class="p">,</span>
+    <span class="n">tunnel_list</span><span class="p">:</span> <span class="n">list</span><span class="p">[</span><span class="n"><a class="autorefs autorefs-internal" href="#tunnel">tunnel</a></span><span class="o">.</span><span class="n"><span title="tunnel.TunnelDict">TunnelDict</span></span><span class="p">],</span>
+    <span class="o">*</span><span class="p">,</span>
+    <span class="n">check_local_port</span><span class="p">:</span> <span class="n">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
+    <span class="n">debug</span><span class="p">:</span> <span class="n">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+    <span class="n">timeout</span><span class="p">:</span> <span class="n">int</span> <span class="o">=</span> <span class="mi">60</span>
+<span class="p">)</span>
+</code></pre></div>
 
   <div class="doc doc-contents ">
   
@@ -256,7 +261,7 @@
               –
               <div class="doc-md-description">
                 <p>List of dictionaries specifying tunnel configurations.
-Each dictionary must have the keys 'command', 'pattern', 'name', and 'note' (optional).</p>
+Each dictionary must have the keys <code>command</code>, <code>pattern</code>, <code>name</code>, <code>note</code> (optional), and <code>callback</code> (optional).</p>
               </div>
             </li>
             <li>
@@ -308,13 +313,15 @@ Each dictionary must have the keys 'command', 'pattern', 'name', and 'note' (opt
 
 
 </h3>
-<pre class="highlight"><code class="language-python doc-signature">add_tunnel(
-    *,
-    command: str,
-    pattern: re.<span title="re.Pattern">Pattern</span> | str,
-    name: str,
-    note: typing.<span title="typing.Optional">Optional</span>[str] = None
-)</code></pre>
+<div class="doc-signature highlight"><pre><span></span><code><span class="n">add_tunnel</span><span class="p">(</span>
+    <span class="o">*</span><span class="p">,</span>
+    <span class="n">command</span><span class="p">:</span> <span class="n">str</span><span class="p">,</span>
+    <span class="n">pattern</span><span class="p">:</span> <span class="n">re</span><span class="o">.</span><span class="n"><span title="re.Pattern">Pattern</span></span> <span class="o">|</span> <span class="n">str</span><span class="p">,</span>
+    <span class="n">name</span><span class="p">:</span> <span class="n">str</span><span class="p">,</span>
+    <span class="n">note</span><span class="p">:</span> <span class="n">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">callback</span><span class="p">:</span> <span class="n">typing</span><span class="o">.</span><span class="n"><span title="typing.Callable">Callable</span></span><span class="p">[[</span><span class="n">str</span><span class="p">,</span> <span class="n">str</span><span class="p">],</span> <span class="kc">None</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
+<span class="p">)</span>
+</code></pre></div>
 
   <div class="doc doc-contents ">
   
@@ -366,6 +373,16 @@ Each dictionary must have the keys 'command', 'pattern', 'name', and 'note' (opt
                 <p>A note about the tunnel.</p>
               </div>
             </li>
+            <li>
+              <b><code>callback</code></b>
+                  (<code>typing.<span title="typing.Callable">Callable</span>[[str, str], None]</code>, default:
+                      <code>None</code>
+)
+              –
+              <div class="doc-md-description">
+                <p>A callback function to be called when when the regex pattern matched.                <code>callback(url, note) -&gt; None</code></p>
+              </div>
+            </li>
         </ul>
       </td>
     </tr>
@@ -385,7 +402,8 @@ Each dictionary must have the keys 'command', 'pattern', 'name', and 'note' (opt
 
 
 </h3>
-<pre class="highlight"><code class="language-python doc-signature">start()</code></pre>
+<div class="doc-signature highlight"><pre><span></span><code><span class="n">start</span><span class="p">()</span>
+</code></pre></div>
 
   <div class="doc doc-contents ">
   
@@ -429,7 +447,8 @@ Each dictionary must have the keys 'command', 'pattern', 'name', and 'note' (opt
 
 
 </h3>
-<pre class="highlight"><code class="language-python doc-signature">stop()</code></pre>
+<div class="doc-signature highlight"><pre><span></span><code><span class="n">stop</span><span class="p">()</span>
+</code></pre></div>
 
   <div class="doc doc-contents ">
   
@@ -473,7 +492,8 @@ Each dictionary must have the keys 'command', 'pattern', 'name', and 'note' (opt
 
 
 </h3>
-<pre class="highlight"><code class="language-python doc-signature">reset()</code></pre>
+<div class="doc-signature highlight"><pre><span></span><code><span class="n">reset</span><span class="p">()</span>
+</code></pre></div>
 
   <div class="doc doc-contents ">
   
@@ -497,7 +517,8 @@ Each dictionary must have the keys 'command', 'pattern', 'name', and 'note' (opt
   </span>
 
 </h3>
-<pre class="highlight"><code class="language-python doc-signature">is_port_available(port: int) -&gt; bool</code></pre>
+<div class="doc-signature highlight"><pre><span></span><code><span class="n">is_port_available</span><span class="p">(</span><span class="n">port</span><span class="p">:</span> <span class="n">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">bool</span>
+</code></pre></div>
 
   <div class="doc doc-contents ">
   
@@ -570,12 +591,13 @@ Each dictionary must have the keys 'command', 'pattern', 'name', and 'note' (opt
   </span>
 
 </h3>
-<pre class="highlight"><code class="language-python doc-signature">wait_for_condition(
-    condition: typing.<span title="typing.Callable">Callable</span>[[], bool],
-    *,
-    interval: int = 1,
-    timeout: int | None = 10
-) -&gt; bool</code></pre>
+<div class="doc-signature highlight"><pre><span></span><code><span class="n">wait_for_condition</span><span class="p">(</span>
+    <span class="n">condition</span><span class="p">:</span> <span class="n">typing</span><span class="o">.</span><span class="n"><span title="typing.Callable">Callable</span></span><span class="p">[[],</span> <span class="n">bool</span><span class="p">],</span>
+    <span class="o">*</span><span class="p">,</span>
+    <span class="n">interval</span><span class="p">:</span> <span class="n">int</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span>
+    <span class="n">timeout</span><span class="p">:</span> <span class="n">int</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="mi">10</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">bool</span>
+</code></pre></div>
 
   <div class="doc doc-contents ">
   

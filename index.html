@@ -47,7 +47,13 @@
     </li>
     <li class="toctree-l2"><a class="reference internal" href="#usage">Usage</a>
     </li>
+    <li class="toctree-l2"><a class="reference internal" href="#logger-propagate">Logger Propagate</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#callback">Callback</a>
+    </li>
     <li class="toctree-l2"><a class="reference internal" href="#todo">TODO</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#personal-note">Personal Note</a>
     </li>
     </ul>
                 </li>
@@ -123,10 +129,42 @@ wrapper = Tunnel.with_tunnel_list(3000, tunnel_list)
 
 wrapper.start()
 </code></pre>
+<h2 id="logger-propagate">Logger Propagate</h2>
+<p>by default <code>propagate</code> is <code>False</code> when initializing <code>Tunnel</code></p>
+<p>meaning the logger for <code>Tunnel</code> is detached from root logger</p>
+<p>you can set to <code>True</code> to propagate log message to root logger, to use root logger message format, etc</p>
+<pre><code class="language-python">tunnel = Tunnel(3000, propagate=True)
+</code></pre>
+<h2 id="callback">Callback</h2>
+<p>since version 0.1.0 <code>Tunnel</code> now has 2 callback</p>
+<p>set it up when initializing <code>Tunnel</code>
+or when adding tunnel <code>Tunnel.add_tunnel</code></p>
+<p>example</p>
+<pre><code class="language-python">def print_callback(urls: list[tuple[str, str | None]]) -&gt; None:
+    print(urls)
+def regex_callback(url: str, note: str | None) -&gt; None:
+    print(url, note)
+
+tunnel = Tunnel(3000, callback=print_callback)
+tunnel.add_tunnel(command=..., pattern=..., name=..., callback=regex_callback)
+
+with tunnel:
+    # code goes here
+</code></pre>
+<p>difference between <code>print_callback</code> and <code>regex_callback</code> is</p>
+<ul>
+<li><code>print_callback</code> executed after all the URLs is printed. will retrive a list of <code>tuple(url, note)</code></li>
+<li><code>regex_callback</code> executed after regex pattern is matched to URL (before print happen). will retrive <code>url: str</code> and <code>note: str | None</code></li>
+</ul>
+<p>example usage is to set callback to send the urls using discord webhook maybe ?</p>
 <h2 id="todo">TODO</h2>
 <ul>
 <li>[ ] -</li>
 </ul>
+<h2 id="personal-note">Personal Note</h2>
+<p>well, in 23 Feb 2024, i accidentaly force push to the repo which overwrite the date of the commit</p>
+<p>but the project still work, so whatever</p>
+<p>for the future me, <strong>DO NOT USE <code>git push -f</code></strong> for whatever reason</p>
 <hr />
 <p>Licensed under the terms of the MIT License. See the <a href="https://github.com/cupang-afk/subprocess-tunnel/blob/master/LICENSE">LICENSE</a> file for details.</p>
               
@@ -177,5 +215,5 @@ wrapper.start()
 
 <!--
 MkDocs version : 1.5.3
-Build Date UTC : 2024-02-10 15:41:28.416023+00:00
+Build Date UTC : 2024-03-30 08:21:31.771124+00:00
 -->
