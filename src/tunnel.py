@@ -138,7 +138,7 @@ class Tunnel:
         command: str,
         pattern: re.Pattern | str,
         name: str,
-        note: Optional[str] = None,
+        note: str = None,
         callback: Callable[[str, str], None] = None,
     ):
         """
