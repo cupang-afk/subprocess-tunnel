@@ -31,6 +31,17 @@ class TunnelDict(TypedDict):
 class Tunnel:
     """
     Tunnel class for managing subprocess-based tunnels.
+
+    Args:
+        port (int): The local port on which the tunnels will be created.
+        check_local_port (bool): Flag to check if the local port is available. Default True.
+        debug (bool): Flag to enable debug mode for additional output. Default False.
+        timeout (int): Maximum time to wait for the tunnels to start. Default 60.
+        propagate (bool): Flag to propagate log messages to the root logger, \
+            if False will create custom log format to print log. Default False.
+        log_dir (os.PathLike): Directory to store log files. Default os.getcwd().
+        callback (Callable[[list[tuple[str, str | None]]], None]): A callback function to be called when Tunnel URL is printed.\
+            `callback([(url1, note1), (url2, note2), ...]) -> None`
     """
 
     def __init__(
@@ -44,20 +55,6 @@ class Tunnel:
         log_dir: os.PathLike = os.getcwd(),
         callback: Callable[[list[tuple[str, str | None]]], None] = None,
     ):
-        """
-        Tunnel class for managing subprocess-based tunnels.
-
-        Args:
-            port (int): The local port on which the tunnels will be created.
-            check_local_port (bool): Flag to check if the local port is available. Default True.
-            debug (bool): Flag to enable debug mode for additional output. Default False.
-            timeout (int): Maximum time to wait for the tunnels to start. Default 60.
-            propagate (bool): Flag to propagate log messages to the root logger, \
-                if False will create custom log format to print log. Default False.
-            log_dir (os.PathLike): Directory to store log files. Default os.getcwd().
-            callback (Callable[[list[tuple[str, str | None]]], None]): A callback function to be called when Tunnel URL is printed.\
-                `callback([(url1, note1), (url2, note2), ...]) -> None`
-        """
         self._is_running = False
 
         self.urls: list[tuple[str, str | None]] = []
@@ -108,7 +105,7 @@ class Tunnel:
         Args:
             port (int): The local port on which the tunnels will be created.
             tunnel_list (list[dict]): List of dictionaries specifying tunnel configurations.
-                Each dictionary must have the keys 'command', 'pattern', 'name', 'note' (optional), and 'callback' (optional).
+                Each dictionary must have the keys `command`, `pattern`, `name`, `note` (optional), and `callback` (optional).
             check_local_port (bool): Flag to check if the local port is available. Default True.
             debug (bool): Flag to enable debug mode for additional output. Default False.
             timeout (int): Maximum time to wait for the tunnels to start. Default 60.
