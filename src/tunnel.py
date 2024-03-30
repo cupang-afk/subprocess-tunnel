@@ -52,7 +52,7 @@ class Tunnel:
         debug: bool = False,
         timeout: int = 60,
         propagate: bool = False,
-        log_dir: os.PathLike = os.getcwd(),
+        log_dir: str | os.PathLike = None,
         callback: Callable[[list[tuple[str, str | None]]], None] = None,
     ):
         self._is_running = False
@@ -71,7 +71,7 @@ class Tunnel:
         self.check_local_port = check_local_port
         self.debug = debug
         self.timeout = timeout
-        self.log_dir = log_dir
+        self.log_dir = log_dir or os.getcwd()
         self.callback = callback
 
         self.logger = logging.getLogger("Tunnel")
