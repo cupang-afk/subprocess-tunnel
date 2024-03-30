@@ -98,6 +98,9 @@ class Tunnel:
         check_local_port: bool = True,
         debug: bool = False,
         timeout: int = 60,
+        propagate: bool = False,
+        log_dir: str | os.PathLike = None,
+        callback: Callable[[list[tuple[str, str | None]]], None] = None,
     ):
         """
         Create a Tunnel instance with a pre-defined list of tunnels.
@@ -109,6 +112,11 @@ class Tunnel:
             check_local_port (bool): Flag to check if the local port is available. Default True.
             debug (bool): Flag to enable debug mode for additional output. Default False.
             timeout (int): Maximum time to wait for the tunnels to start. Default 60.
+            propagate (bool): Flag to propagate log messages to the root logger, \
+                if False will create custom log format to print log. Default False.
+            log_dir (os.PathLike): Directory to store log files. Default os.getcwd().
+            callback (Callable[[list[tuple[str, str | None]]], None]): A callback function to be called when Tunnel URL is printed.\
+                `callback([(url1, note1), (url2, note2), ...]) -> None`
         """
         if not tunnel_list or not all(
             isinstance(i, dict)
@@ -127,7 +135,15 @@ class Tunnel:
                 "  note: str\n"
                 "  callback: Callable[[str, str], None]"
             )
-        init_cls = cls(port, check_local_port=check_local_port, debug=debug, timeout=timeout)
+        init_cls = cls(
+            port,
+            check_local_port=check_local_port,
+            debug=debug,
+            timeout=timeout,
+            propagate=propagate,
+            log_dir=log_dir,
+            callback=callback,
+        )
         for tunnel in tunnel_list:
             init_cls.add_tunnel(**tunnel)
         return init_cls
