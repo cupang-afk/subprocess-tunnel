@@ -140,12 +140,18 @@ def test_wait_for_condition(result):
     assert Tunnel.wait_for_condition(condition, timeout=1) == result
 
 
-def test__process_line():
+def test__process_line(mocker: MockerFixture):
+    mock_callback = mocker.MagicMock()
     tunnel = Tunnel(3000)
-    tunnel.add_tunnel(**{"command": "cmd", "pattern": "pat", "name": "n", "note": "nt"})
-    line = "http://pat nt"
+    tunnel.add_tunnel(
+        **{"command": "cmd", "pattern": "pat", "name": "n", "note": "nt", "callback": mock_callback}
+    )
+    link = "http://pat"
+    note = "nt"
+    line = f"{link} {note}"
     assert tunnel._process_line(line)
-    assert line in tunnel.urls
+    assert (link, note) in tunnel.urls
+    mock_callback.assert_called_with(link, note)
 
 
 @pytest.mark.parametrize(
@@ -201,15 +207,18 @@ def test__print(
 ):
     mock_logger = mocker.MagicMock()
     mock_get_logger.return_value = mock_logger
+    mock_callback = mocker.MagicMock()
 
     mocker.patch.object(Tunnel, "wait_for_condition", return_value=wait_condition)
     tunnel = Tunnel(3000)
-    tunnel.urls = ["http://example.com"]
+    tunnel.urls = [("http://example.com", None)]
     tunnel.check_local_port = check_local_port
+    tunnel.callback = mock_callback
 
     tunnel._print()
 
     mock_logger.info.assert_has_calls([mocker.call(c) for c in expected_info_calls])
+    mock_callback.assert_called_with(tunnel.urls)
     if wait_condition is False:
         mock_logger.warning.assert_has_calls([mocker.call(c) for c in expected_warning_calls])
 

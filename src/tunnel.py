@@ -25,6 +25,7 @@ class TunnelDict(TypedDict):
     pattern: re.Pattern
     name: str
     note: Optional[str]
+    callback: Optional[Callable[[str, str], None]]  # (url, note) -> None
 
 
 class Tunnel:
@@ -41,6 +42,7 @@ class Tunnel:
         timeout: int = 60,
         propagate: bool = False,
         log_dir: os.PathLike = os.getcwd(),
+        callback: Callable[[list[tuple[str, str | None]]], None] = None,
     ):
         """
         Tunnel class for managing subprocess-based tunnels.
@@ -53,10 +55,12 @@ class Tunnel:
             propagate (bool): Flag to propagate log messages to the root logger, \
                 if False will create custom log format to print log. Default False.
             log_dir (os.PathLike): Directory to store log files. Default os.getcwd().
+            callback (Callable[[list[tuple[str, str | None]]], None]): A callback function to be called when Tunnel URL is printed.\
+                `callback([(url1, note1), (url2, note2), ...]) -> None`
         """
         self._is_running = False
 
-        self.urls: list[str] = []
+        self.urls: list[tuple[str, str | None]] = []
         self.urls_lock = Lock()
 
         self.jobs: list[Thread] = []
@@ -71,6 +75,7 @@ class Tunnel:
         self.debug = debug
         self.timeout = timeout
         self.log_dir = log_dir
+        self.callback = callback
 
         self.logger = logging.getLogger("Tunnel")
         self.logger.setLevel(logging.DEBUG if debug else logging.INFO)
@@ -103,7 +108,7 @@ class Tunnel:
         Args:
             port (int): The local port on which the tunnels will be created.
             tunnel_list (list[dict]): List of dictionaries specifying tunnel configurations.
-                Each dictionary must have the keys 'command', 'pattern', 'name', and 'note' (optional).
+                Each dictionary must have the keys 'command', 'pattern', 'name', 'note' (optional), and 'callback' (optional).
             check_local_port (bool): Flag to check if the local port is available. Default True.
             debug (bool): Flag to enable debug mode for additional output. Default False.
             timeout (int): Maximum time to wait for the tunnels to start. Default 60.
@@ -122,7 +127,8 @@ class Tunnel:
                 "  pattern: re.Pattern | str\n"
                 "  name: str\n"
                 "optional key-value pairs:\n"
-                "  note: str"
+                "  note: str\n"
+                "  callback: Callable[[str, str], None]"
             )
         init_cls = cls(port, check_local_port=check_local_port, debug=debug, timeout=timeout)
         for tunnel in tunnel_list:
@@ -130,7 +136,13 @@ class Tunnel:
         return init_cls
 
     def add_tunnel(
-        self, *, command: str, pattern: re.Pattern | str, name: str, note: Optional[str] = None
+        self,
+        *,
+        command: str,
+        pattern: re.Pattern | str,
+        name: str,
+        note: Optional[str] = None,
+        callback: Callable[[str, str], None] = None,
     ):
         """
         Add a tunnel.
@@ -140,11 +152,15 @@ class Tunnel:
             pattern (re.Pattern | str): A regular expression pattern to match the tunnel URL.
             name (str): The name of the tunnel.
             note (Optional[str]): A note about the tunnel.
+            callback (Callable[[str, str], None]): A callback function to be called when when the regex pattern matched.\
+                `callback(url, note) -> None`
         """
         # compile pattern
         if isinstance(pattern, str):
             pattern = re.compile(pattern)
-        self.tunnel_list.append(dict(command=command, pattern=pattern, name=name, note=note))
+        self.tunnel_list.append(
+            dict(command=command, pattern=pattern, name=name, note=note, callback=callback)
+        )
 
     def start(self):
         """
@@ -326,12 +342,16 @@ class Tunnel:
         """
         for tunnel in self.tunnel_list:
             note = tunnel.get("note")
+            callback = tunnel.get("callback")
             regex = tunnel["pattern"]
             matches = regex.search(line)
             if matches:
-                link = f"{matches.group()}{(' ' + note) if note else ''}".strip()
+                link = matches.group().strip()
+                link = link if link.startswith("http") else "http://" + link
                 with self.urls_lock:
-                    self.urls.append(link if link.startswith("http") else "http://" + link)
+                    self.urls.append((link, note))
+                if callback:
+                    callback(link, note)
                 return True
         return False
 
@@ -419,6 +439,9 @@ class Tunnel:
 
         # Print URLs
         if not self.stop_event.is_set():
-            for url in self.urls:
-                log.info(f"* Running on: {url}")
+            with self.urls_lock:
+                for url, note in self.urls:
+                    log.info(f"* Running on: {url}{(' ' + note) if note else ''}")
+                if self.callback:
+                    self.callback(self.urls)
             self.printed.set()
