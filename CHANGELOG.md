@@ -1,3 +1,10 @@
+## 0.1.1 (2024-03-31)
+
+### Fix
+
+- **Tunnel**: fix Tunnel.with_tunnel_list didn't have same parameter as Tunnel.__init__ when it should be the same
+- **Tunnel**: fix log_dir os.getcwd when frozen
+
 ## 0.1.0 (2024-03-30)
 
 ### Feat
