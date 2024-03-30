@@ -39,6 +39,8 @@ class Tunnel:
         check_local_port: bool = True,
         debug: bool = False,
         timeout: int = 60,
+        propagate: bool = False,
+        log_dir: os.PathLike = os.getcwd(),
     ):
         """
         Tunnel class for managing subprocess-based tunnels.
@@ -48,6 +50,9 @@ class Tunnel:
             check_local_port (bool): Flag to check if the local port is available. Default True.
             debug (bool): Flag to enable debug mode for additional output. Default False.
             timeout (int): Maximum time to wait for the tunnels to start. Default 60.
+            propagate (bool): Flag to propagate log messages to the root logger, \
+                if False will create custom log format to print log. Default False.
+            log_dir (os.PathLike): Directory to store log files. Default os.getcwd().
         """
         self._is_running = False
 
@@ -65,17 +70,20 @@ class Tunnel:
         self.check_local_port = check_local_port
         self.debug = debug
         self.timeout = timeout
+        self.log_dir = log_dir
 
         self.logger = logging.getLogger("Tunnel")
-        self.logger.setLevel(logging.DEBUG)
-        self.logger.propagate = False
-        if not self.logger.handlers:
-            handler = logging.StreamHandler()
-            handler.setLevel(logging.DEBUG if debug else logging.INFO)
-            handler.setFormatter(
-                CustomLogFormat("[{asctime} {levelname}]: {message}", datefmt="%X", style="{")
-            )
-            self.logger.addHandler(handler)
+        self.logger.setLevel(logging.DEBUG if debug else logging.INFO)
+        # write our own logger format when propagate is false
+        if not propagate:
+            self.logger.propagate = False
+            if not self.logger.handlers:
+                handler = logging.StreamHandler()
+                handler.setLevel(self.logger.level)
+                handler.setFormatter(
+                    CustomLogFormat("[{asctime} {levelname}]: {message}", datefmt="%X", style="{")
+                )
+                self.logger.addHandler(handler)
 
         self.WINDOWS = True if os.name == "nt" else False
 
@@ -335,7 +343,7 @@ class Tunnel:
             cmd (str): The command to execute for the tunnel.
             name (str): Name of the tunnel.
         """
-        log_path = Path(f"tunnel_{name}.log")
+        log_path = Path(self.log_dir, f"tunnel_{name}.log")
         log_path.write_text("")  # Clear the log
 
         # setup command logger
