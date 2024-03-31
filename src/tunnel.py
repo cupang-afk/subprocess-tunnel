@@ -441,6 +441,7 @@ class Tunnel:
                 interval=1,
                 timeout=None,
             )
+            log.info(f"Port is online, waiting tunnel URLs (timeout: {self.timeout}s)")
 
         # Wait until all URLs are available or stop_event is set
         if not self.wait_for_condition(
