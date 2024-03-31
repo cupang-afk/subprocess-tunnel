@@ -39,7 +39,7 @@ class Tunnel:
         timeout (int): Maximum time to wait for the tunnels to start. Default 60.
         propagate (bool): Flag to propagate log messages to the root logger, \
             if False will create custom log format to print log. Default False.
-        log_dir (os.PathLike): Directory to store log files. Default os.getcwd().
+        log_dir (os.PathLike): Directory to store log files. If None it will set to os.get_cwd(). Default None.
         callback (Callable[[list[tuple[str, str | None]]], None]): A callback function to be called when Tunnel URL is printed.\
             `callback([(url1, note1), (url2, note2), ...]) -> None`
     """
@@ -114,7 +114,7 @@ class Tunnel:
             timeout (int): Maximum time to wait for the tunnels to start. Default 60.
             propagate (bool): Flag to propagate log messages to the root logger, \
                 if False will create custom log format to print log. Default False.
-            log_dir (os.PathLike): Directory to store log files. Default os.getcwd().
+            log_dir (os.PathLike): Directory to store log files. If None it will set to os.get_cwd(). Default None.
             callback (Callable[[list[tuple[str, str | None]]], None]): A callback function to be called when Tunnel URL is printed.\
                 `callback([(url1, note1), (url2, note2), ...]) -> None`
         """
