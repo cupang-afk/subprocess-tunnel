@@ -24,9 +24,9 @@ class CustomLogFormat(logging.Formatter):
         names = record.name.split(".") if record.name else []
         if len(names) > 1:
             _, *names = names
-            record.msg = f" [{' '.join(names)}]: {record.msg}"
+            record.msg = f"[{' '.join(names)}] {record.msg}"
         else:
-            record.msg = f": {record.msg}"
+            record.msg = f"{record.msg}"
         return super().format(record)
 
 
@@ -98,7 +98,7 @@ class Tunnel:
                 handler = logging.StreamHandler()
                 handler.setLevel(self.logger.level)
                 handler.setFormatter(
-                    CustomLogFormat("[{asctime} {levelname}]{message}", datefmt="%X", style="{")
+                    CustomLogFormat("[{asctime} {levelname}]: {message}", datefmt="%X", style="{")
                 )
                 self.logger.addHandler(handler)
         if self.log_handlers:
@@ -106,6 +106,7 @@ class Tunnel:
                 self.logger.addHandler(i)
 
         self.WINDOWS = True if os.name == "nt" else False
+        self.logger.info("Initializing Tunnel")
 
     @classmethod
     def with_tunnel_list(
@@ -193,13 +194,16 @@ class Tunnel:
             note (str, optional): A note about the tunnel. Defaults to `None`.
             callback (Callable[[str, str], None], optional): A callback function to be called when when the regex pattern matched.\
                 will call `callback(url, note) -> None`. Defaults to `None`.
+
+        Note:
+            `name` must be unique name as is being used for `.log` file,
         """
         # compile pattern
         if isinstance(pattern, str):
             pattern = re.compile(pattern)
 
         log = self.logger
-        log.info(f"Adding tunnel {command=} {pattern=} {name=} {note=} {callback=}")
+        log.debug(f"Adding tunnel {command=} {pattern=} {name=} {note=} {callback=}")
         names_lower = [x["name"].lower() for x in self.tunnel_list]
         counter = 0
         name_original = name
@@ -208,10 +212,7 @@ class Tunnel:
                 counter += 1
                 name = f"{name}_{counter}"
         if name != name_original:
-            log.warning(
-                f'Name of tunnel command={command} changed from "{name_original}" to "{name}"'
-            )
-            log.warning("The name is being used for .log file so it need to be unique each tunnel")
+            log.warning(f'Name of tunnel {command=} changed from "{name_original}" to "{name}"')
         self.tunnel_list.append(
             dict(command=command, pattern=pattern, name=name, note=note, callback=callback)
         )
