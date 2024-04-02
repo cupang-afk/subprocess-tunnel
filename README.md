@@ -63,6 +63,19 @@ you can set to `True` to propagate log message to root logger, to use root logge
 tunnel = Tunnel(3000, propagate=True)
 ```
 
+## Logger Handler
+
+set your `logger.Handler` when initializing `Tunnel`
+
+```python
+import logging
+
+handler = logging.FileHandler("tunnel.log", encoding="utf-8")
+handler.setFormatter(logging.Formatter("{asctime}: {message}", datefmt="%X", style="{"))
+
+tunnel = Tunnel(3000, log_handlers=[handler])
+```
+
 ## Callback
 
 since version 0.1.0 `Tunnel` now has 2 callback
