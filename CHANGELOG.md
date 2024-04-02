@@ -1,3 +1,23 @@
+## 0.2.0 (2024-04-02)
+
+### Feat
+
+- **Tunnel**: add log_handlers parameter to add handler to Tunnel.logger
+- **Tunnel**: set minimum python 3.8 (before was 3.10)
+- **Tunnel**: add get_port()
+
+### Fix
+
+- **Tunnel.add_tunnel**: fix unique name extending to tunnel_1_2 instead of tunnel_2
+- **Tunnel._print**: fix port is online log being printed when stop_event is set
+
+### Refactor
+
+- **Tunnel**: change is_port_available to is_port_in_use as Tunnel usually check if port is in use by another process
+- **Tunnel.add_tunnel**: add name checking
+- **Tunnel.stop**: make stop gracefully
+- refactor output type for typing
+
 ## 0.1.2 (2024-03-31)
 
 ## 0.1.1 (2024-03-31)
