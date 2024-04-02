@@ -1,3 +1,8 @@
+import sys
+
+if sys.version_info < (3, 8):
+    raise RuntimeError(f"Minimum python version is 3.8, you have {sys.version}")
+
 import logging
 import os
 import re
@@ -8,7 +13,10 @@ import subprocess
 import time
 from pathlib import Path
 from threading import Event, Lock, Thread
-from typing import Callable, Optional, TypedDict
+from typing import Callable, List, Optional, Tuple, TypedDict, Union, get_args
+
+StrOrPath = Union[str, Path]
+StrOrRegexPattern = Union[str, re.Pattern]
 
 
 class CustomLogFormat(logging.Formatter):
@@ -36,30 +44,29 @@ class Tunnel:
 
     Args:
         port (int): The local port on which the tunnels will be created.
-        check_local_port (bool): Flag to check if the local port is available. Default True.
-        debug (bool): Flag to enable debug mode for additional output. Default False.
-        timeout (int): Maximum time to wait for the tunnels to start. Default 60.
-        propagate (bool): Flag to propagate log messages to the root logger, \
-            if False will create custom log format to print log. Default False.
-        log_dir (os.PathLike): Directory to store log files. If None it will set to os.get_cwd(). Default None.
-        callback (Callable[[list[tuple[str, str | None]]], None]): A callback function to be called when Tunnel URL is printed.\
-            `callback([(url1, note1), (url2, note2), ...]) -> None`
+        check_local_port (bool, optional): Flag to check if the local port is available.
+        debug (bool, optional): Flag to enable debug mode for additional output.
+        timeout (int, optional): Maximum time to wait for the tunnels to start.
+        propagate (bool, optional): Flag to propagate log messages to the root logger, \
+            if `False` will create custom log format to print log.
+        log_dir (StrOrPath, optional): Directory to store tunnel log files. If `None` it will set to `os.get_cwd()`.
+        callback (Callable[[List[Tuple[str, Optional[str]]]], None], optional): A callback function to be called when Tunnel URL is printed.\
+            will call `callback([(url1, note1), (url2, note2), ...]) -> None`.
     """
 
     def __init__(
         self,
         port: int,
-        *,
         check_local_port: bool = True,
         debug: bool = False,
         timeout: int = 60,
         propagate: bool = False,
-        log_dir: str | os.PathLike = None,
-        callback: Callable[[list[tuple[str, str | None]]], None] = None,
+        log_dir: StrOrPath = None,
+        callback: Callable[[List[Tuple[str, Optional[str]]]], None] = None,
     ):
         self._is_running = False
 
-        self.urls: list[tuple[str, str | None]] = []
+        self.urls: list[tuple[str, Optional[str]]] = []
         self.urls_lock = Lock()
 
         self.jobs: list[Thread] = []
@@ -95,43 +102,45 @@ class Tunnel:
     def with_tunnel_list(
         cls,
         port: int,
-        tunnel_list: list[TunnelDict],
-        *,
+        tunnel_list: List[TunnelDict],
         check_local_port: bool = True,
         debug: bool = False,
         timeout: int = 60,
         propagate: bool = False,
-        log_dir: str | os.PathLike = None,
-        callback: Callable[[list[tuple[str, str | None]]], None] = None,
+        log_dir: StrOrPath = None,
+        callback: Callable[[List[Tuple[str, Optional[str]]]], None] = None,
     ):
         """
         Create a Tunnel instance with a pre-defined list of tunnels.
 
         Args:
             port (int): The local port on which the tunnels will be created.
-            tunnel_list (list[dict]): List of dictionaries specifying tunnel configurations.
+            tunnel_list (List[dict]): List of dictionaries specifying tunnel configurations.
                 Each dictionary must have the keys `command`, `pattern`, `name`, `note` (optional), and `callback` (optional).
-            check_local_port (bool): Flag to check if the local port is available. Default True.
-            debug (bool): Flag to enable debug mode for additional output. Default False.
-            timeout (int): Maximum time to wait for the tunnels to start. Default 60.
+            check_local_port (bool, optional): Flag to check if the local port is available.
+            debug (bool, optional): Flag to enable debug mode for additional output.
+            timeout (int, optional): Maximum time to wait for the tunnels to start.
             propagate (bool): Flag to propagate log messages to the root logger, \
-                if False will create custom log format to print log. Default False.
-            log_dir (os.PathLike): Directory to store log files. If None it will set to os.get_cwd(). Default None.
-            callback (Callable[[list[tuple[str, str | None]]], None]): A callback function to be called when Tunnel URL is printed.\
-                `callback([(url1, note1), (url2, note2), ...]) -> None`
+                if `False` will create custom log format to print log.
+            log_dir (StrOrPath, optional): Directory to store tunnel log files. If `None` it will set to `os.get_cwd()`.
+            callback (Callable[[List[Tuple[str, Optional[str]]]], None], optional): A callback function to be called when Tunnel URL is printed.\
+                will call `callback([(url1, note1), (url2, note2), ...]) -> None`.
+
+        Raises:
+            ValueError: Raised if `tunnel_list` doesn't have dict with keys atleast `command`, `pattern`, `name`
         """
         if not tunnel_list or not all(
             isinstance(i, dict)
             and {"command", "pattern", "name"}.issubset(i)
             and isinstance(i["command"], str)
-            and isinstance(i["pattern"], (re.Pattern, str))
+            and isinstance(i["pattern"], get_args(StrOrRegexPattern))
             and isinstance(i["name"], str)
             for i in tunnel_list
         ):
             raise ValueError(
                 "tunnel_list must be a list of dictionaries with required key-value pairs:\n"
                 "  command: str\n"
-                "  pattern: re.Pattern | str\n"
+                "  pattern: StrOrRegexPattern\n"
                 "  name: str\n"
                 "optional key-value pairs:\n"
                 "  note: str\n"
@@ -154,7 +163,7 @@ class Tunnel:
         self,
         *,
         command: str,
-        pattern: re.Pattern | str,
+        pattern: StrOrRegexPattern,
         name: str,
         note: str = None,
         callback: Callable[[str, str], None] = None,
@@ -164,11 +173,11 @@ class Tunnel:
 
         Args:
             command (str): The command to execute for the tunnel.
-            pattern (re.Pattern | str): A regular expression pattern to match the tunnel URL.
+            pattern (StrOrRegexPattern): A regular expression pattern to match the tunnel URL.
             name (str): The name of the tunnel.
-            note (Optional[str]): A note about the tunnel.
-            callback (Callable[[str, str], None]): A callback function to be called when when the regex pattern matched.\
-                `callback(url, note) -> None`
+            note (str, optional): A note about the tunnel. Defaults to `None`.
+            callback (Callable[[str, str], None], optional): A callback function to be called when when the regex pattern matched.\
+                will call `callback(url, note) -> None`. Defaults to `None`.
         """
         # compile pattern
         if isinstance(pattern, str):
@@ -197,7 +206,7 @@ class Tunnel:
         Start the tunnel and wait for the URLs to be printed.
 
         Raises:
-            RuntimeError: Raise if tunnel is already running
+            RuntimeError: Raised if tunnel is already running
         """
         if self._is_running:
             raise RuntimeError("Tunnel is already running")
@@ -222,7 +231,7 @@ class Tunnel:
         Stop the tunnel and reset internal state.
 
         Raises:
-            RuntimeError: Raise if tunnel is not running
+            RuntimeError: Raised if tunnel is not running
         """
         if not self._is_running:
             raise RuntimeError("Tunnel is not running")
@@ -306,7 +315,7 @@ class Tunnel:
             port (int): The port to check.
 
         Returns:
-            bool: True if the port is available, False otherwise.
+            bool: `True` if the port is available, `False` otherwise.
         """
         try:
             with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
@@ -318,7 +327,7 @@ class Tunnel:
 
     @staticmethod
     def wait_for_condition(
-        condition: Callable[[], bool], *, interval: int = 1, timeout: int | None = 10
+        condition: Callable[[], bool], *, interval: int = 1, timeout: int = 10
     ) -> bool:
         """
         Wait for the condition to be true until the specified timeout.
@@ -327,11 +336,11 @@ class Tunnel:
 
         Args:
             condition (Callable[[], bool]): The condition to check.
-            interval (int): The interval (in seconds) between condition checks.
-            timeout (int): Maximum time to wait for the condition. None for no timeout.
+            interval (int, optional): The interval (in seconds) between condition checks.
+            timeout (int, optional): Maximum time to wait for the condition. `None` for no timeout.
 
         Returns:
-            bool: True if the condition is met, False if timeout is reached.
+            bool: `True` if the condition is met, `False` if timeout is reached.
         """
         start_time = time.time()
 

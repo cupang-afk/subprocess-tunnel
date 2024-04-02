@@ -10,25 +10,27 @@ Documentation are located [here](https://cupang-afk.github.io/subprocess-tunnel/
 
 This is not a module, instead, you can just download [tunnel.py](https://github.com/cupang-afk/subprocess-tunnel/blob/master/src/tunnel.py) and import it
 
+you need atleast python 3.8
+
 ```python
 from tunnel import Tunnel
 
 # Setting up the tunnel
-wrapper = Tunnel(3000)  # Tunnel on port 3000
-wrapper.add_tunnel(
+tunnel = Tunnel(3000)  # Tunnel on port 3000
+tunnel.add_tunnel(
     command="cloudflared tunnel --url http://localhost:{port}", # {port} automatically changed to 3000
     pattern=r"[\w-]+\.trycloudflare\.com",
     name="Cloudflare"
 )
 
 # Starting the tunnel
-wrapper.start()
+tunnel.start()
 
 # Stopping the tunnel
-wrapper.stop()
+tunnel.stop()
 
 # Using a with block
-with wrapper:
+with tunnel:
     pass
 
 # Setting up tunnel with a list
@@ -44,9 +46,9 @@ tunnel_list = [
         "name": "tunnel_2"
     }
 ]
-wrapper = Tunnel.with_tunnel_list(3000, tunnel_list)
+tunnel = Tunnel.with_tunnel_list(3000, tunnel_list)
 
-wrapper.start()
+tunnel.start()
 ```
 
 ## Logger Propagate
@@ -83,7 +85,7 @@ with tunnel:
     # code goes here
 ```
 
-difference between `print_callback` and `regex_callback` is
+in code above, difference between `print_callback` and `regex_callback` is
 
 - `print_callback` executed after all the URLs is printed. will retrive a list of `tuple(url, note)`
 - `regex_callback` executed after regex pattern is matched to URL (before print happen). will retrive `url: str` and `note: str | None`
@@ -92,7 +94,7 @@ example usage is to set callback to send the urls using discord webhook maybe ?
 
 ## TODO
 
-- [ ] -
+- [ ] fixing stuff, adding stuff idk
 
 ## Personal Note
 
