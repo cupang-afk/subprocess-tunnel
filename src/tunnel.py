@@ -322,22 +322,21 @@ class Tunnel:
         self._is_running = False
 
     @staticmethod
-    def is_port_available(port: int) -> bool:
+    def is_port_in_use(port: int) -> bool:
         """
-        Check if the specified port is available.
+        Check if the specified port is in use.
 
         Args:
             port (int): The port to check.
 
         Returns:
-            bool: `True` if the port is available, `False` otherwise.
+            bool: `True` if the port is in use, `False` otherwise.
         """
         try:
             with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
                 s.settimeout(1)
-                # equal to 0 meaning there is an app that use it
-                return s.connect_ex(("localhost", port)) != 0
-        except OSError:
+                return s.connect_ex(("localhost", port)) == 0
+        except Exception:
             return False
 
     @staticmethod
@@ -439,7 +438,7 @@ class Tunnel:
                     f"Wait until port: {self.port} online before running the command for {name}"
                 )
                 self.wait_for_condition(
-                    lambda: not self.is_port_available(self.port) or self.stop_event.is_set(),
+                    lambda: self.is_port_in_use(self.port) or self.stop_event.is_set(),
                     interval=1,
                     timeout=None,
                 )
@@ -483,7 +482,7 @@ class Tunnel:
             # Wait until the port is available or stop_event is set
             log.info(f"Wait until port: {self.port} online before print URLs")
             self.wait_for_condition(
-                lambda: not self.is_port_available(self.port) or self.stop_event.is_set(),
+                lambda: self.is_port_in_use(self.port) or self.stop_event.is_set(),
                 interval=1,
                 timeout=None,
             )
