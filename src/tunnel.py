@@ -232,6 +232,9 @@ class Tunnel:
 
         self.reset()
 
+    def get_port(self) -> int:
+        return self.port
+
     def __enter__(self):
         if self._is_running:
             raise RuntimeError("Tunnel is already running by another method")
@@ -260,6 +263,7 @@ class Tunnel:
             self.jobs.append(tunnel_thread)
 
         self._is_running = True
+        return self
 
     def __exit__(self, exc_type, exc_value, exc_tb):
         self.stop()
