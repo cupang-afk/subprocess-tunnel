@@ -49,9 +49,13 @@ class Tunnel:
         timeout (int, optional): Maximum time to wait for the tunnels to start.
         propagate (bool, optional): Flag to propagate log messages to the root logger, \
             if `False` will create custom log format to print log.
+        log_handlers (List[logging.Handler], optional): List of logging handlers to be added to the Tunnel logger.
         log_dir (StrOrPath, optional): Directory to store tunnel log files. If `None` it will set to `os.get_cwd()`.
         callback (Callable[[List[Tuple[str, Optional[str]]]], None], optional): A callback function to be called when Tunnel URL is printed.\
             will call `callback([(url1, note1), (url2, note2), ...]) -> None`.
+
+    Note:
+        output of each tunnel command will be saved to `log_dir`
     """
 
     def __init__(
@@ -61,6 +65,7 @@ class Tunnel:
         debug: bool = False,
         timeout: int = 60,
         propagate: bool = False,
+        log_handlers: List[logging.Handler] = None,
         log_dir: StrOrPath = None,
         callback: Callable[[List[Tuple[str, Optional[str]]]], None] = None,
     ):
@@ -80,6 +85,7 @@ class Tunnel:
         self.check_local_port = check_local_port
         self.debug = debug
         self.timeout = timeout
+        self.log_handlers = log_handlers
         self.log_dir = log_dir or os.getcwd()
         self.callback = callback
 
@@ -95,6 +101,9 @@ class Tunnel:
                     CustomLogFormat("[{asctime} {levelname}]{message}", datefmt="%X", style="{")
                 )
                 self.logger.addHandler(handler)
+        if self.log_handlers:
+            for i in self.log_handlers:
+                self.logger.addHandler(i)
 
         self.WINDOWS = True if os.name == "nt" else False
 
@@ -107,6 +116,7 @@ class Tunnel:
         debug: bool = False,
         timeout: int = 60,
         propagate: bool = False,
+        log_handlers: List[logging.Handler] = None,
         log_dir: StrOrPath = None,
         callback: Callable[[List[Tuple[str, Optional[str]]]], None] = None,
     ):
@@ -122,12 +132,16 @@ class Tunnel:
             timeout (int, optional): Maximum time to wait for the tunnels to start.
             propagate (bool): Flag to propagate log messages to the root logger, \
                 if `False` will create custom log format to print log.
+            log_handlers (List[logging.Handler], optional): List of logging handlers to be added to the Tunnel logger.
             log_dir (StrOrPath, optional): Directory to store tunnel log files. If `None` it will set to `os.get_cwd()`.
             callback (Callable[[List[Tuple[str, Optional[str]]]], None], optional): A callback function to be called when Tunnel URL is printed.\
                 will call `callback([(url1, note1), (url2, note2), ...]) -> None`.
 
         Raises:
             ValueError: Raised if `tunnel_list` doesn't have dict with keys atleast `command`, `pattern`, `name`
+
+        Note:
+            output of each tunnel command will be saved to `log_dir`
         """
         if not tunnel_list or not all(
             isinstance(i, dict)
@@ -152,6 +166,7 @@ class Tunnel:
             debug=debug,
             timeout=timeout,
             propagate=propagate,
+            log_handlers=log_handlers,
             log_dir=log_dir,
             callback=callback,
         )
