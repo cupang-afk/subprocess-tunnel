@@ -16,7 +16,9 @@ class CustomLogFormat(logging.Formatter):
         names = record.name.split(".") if record.name else []
         if len(names) > 1:
             _, *names = names
-            record.msg = f"[{' '.join(names)}] {record.msg}"
+            record.msg = f" [{' '.join(names)}]: {record.msg}"
+        else:
+            record.msg = f": {record.msg}"
         return super().format(record)
 
 
@@ -83,7 +85,7 @@ class Tunnel:
                 handler = logging.StreamHandler()
                 handler.setLevel(self.logger.level)
                 handler.setFormatter(
-                    CustomLogFormat("[{asctime} {levelname}]: {message}", datefmt="%X", style="{")
+                    CustomLogFormat("[{asctime} {levelname}]{message}", datefmt="%X", style="{")
                 )
                 self.logger.addHandler(handler)
 
