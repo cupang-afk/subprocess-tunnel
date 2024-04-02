@@ -210,7 +210,7 @@ class Tunnel:
         for n in names_lower:
             if name.lower() == n:
                 counter += 1
-                name = f"{name}_{counter}"
+                name = f"{name_original}_{counter}"
         if name != name_original:
             log.warning(f'Name of tunnel {command=} changed from "{name_original}" to "{name}"')
         self.tunnel_list.append(
