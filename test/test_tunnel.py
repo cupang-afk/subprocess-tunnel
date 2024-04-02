@@ -163,6 +163,7 @@ def test__process_line(mocker: MockerFixture):
             [
                 "Getting URLs",
                 "Wait until port: 3000 online before print URLs",
+                "Port is online, waiting tunnel URLs (timeout: 60s)",
                 "* Running on: http://example.com",
             ],
             [],
@@ -173,6 +174,7 @@ def test__process_line(mocker: MockerFixture):
             [
                 "Getting URLs",
                 "Wait until port: 3000 online before print URLs",
+                "Port is online, waiting tunnel URLs (timeout: 60s)",
                 "* Running on: http://example.com",
             ],
             ["Timeout while getting tunnel URLs, print available URLs"],
