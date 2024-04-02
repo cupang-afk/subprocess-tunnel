@@ -218,13 +218,14 @@ class Tunnel:
             log.debug(f"Stopping {process}")
             while process.poll() is None:
                 try:
-                    process.communicate(timeout=15)
+                    process.terminate()
+                    process.wait(timeout=15)
                 except subprocess.TimeoutExpired:
                     if self.WINDOWS:
                         process.send_signal(signal.CTRL_BREAK_EVENT)
                         process.send_signal(signal.CTRL_C_EVENT)
                     process.kill()
-            process.communicate()
+            log.debug(f"Stopped {process}")
 
         for job in self.jobs:
             log.debug(f"Join thread {job}")
