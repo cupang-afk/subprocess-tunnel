@@ -49,6 +49,8 @@
     </li>
     <li class="toctree-l2"><a class="reference internal" href="#logger-propagate">Logger Propagate</a>
     </li>
+    <li class="toctree-l2"><a class="reference internal" href="#logger-handler">Logger Handler</a>
+    </li>
     <li class="toctree-l2"><a class="reference internal" href="#callback">Callback</a>
     </li>
     <li class="toctree-l2"><a class="reference internal" href="#todo">TODO</a>
@@ -92,24 +94,25 @@
 <p>Documentation are located <a href="https://cupang-afk.github.io/subprocess-tunnel/">here</a></p>
 <h2 id="usage">Usage</h2>
 <p>This is not a module, instead, you can just download <a href="https://github.com/cupang-afk/subprocess-tunnel/blob/master/src/tunnel.py">tunnel.py</a> and import it</p>
+<p>you need atleast python 3.8</p>
 <pre><code class="language-python">from tunnel import Tunnel
 
 # Setting up the tunnel
-wrapper = Tunnel(3000)  # Tunnel on port 3000
-wrapper.add_tunnel(
+tunnel = Tunnel(3000)  # Tunnel on port 3000
+tunnel.add_tunnel(
     command=&quot;cloudflared tunnel --url http://localhost:{port}&quot;, # {port} automatically changed to 3000
     pattern=r&quot;[\w-]+\.trycloudflare\.com&quot;,
     name=&quot;Cloudflare&quot;
 )
 
 # Starting the tunnel
-wrapper.start()
+tunnel.start()
 
 # Stopping the tunnel
-wrapper.stop()
+tunnel.stop()
 
 # Using a with block
-with wrapper:
+with tunnel:
     pass
 
 # Setting up tunnel with a list
@@ -125,15 +128,24 @@ tunnel_list = [
         &quot;name&quot;: &quot;tunnel_2&quot;
     }
 ]
-wrapper = Tunnel.with_tunnel_list(3000, tunnel_list)
+tunnel = Tunnel.with_tunnel_list(3000, tunnel_list)
 
-wrapper.start()
+tunnel.start()
 </code></pre>
 <h2 id="logger-propagate">Logger Propagate</h2>
 <p>by default <code>propagate</code> is <code>False</code> when initializing <code>Tunnel</code></p>
 <p>meaning the logger for <code>Tunnel</code> is detached from root logger</p>
 <p>you can set to <code>True</code> to propagate log message to root logger, to use root logger message format, etc</p>
 <pre><code class="language-python">tunnel = Tunnel(3000, propagate=True)
+</code></pre>
+<h2 id="logger-handler">Logger Handler</h2>
+<p>set your <code>logger.Handler</code> when initializing <code>Tunnel</code></p>
+<pre><code class="language-python">import logging
+
+handler = logging.FileHandler(&quot;tunnel.log&quot;, encoding=&quot;utf-8&quot;)
+handler.setFormatter(logging.Formatter(&quot;{asctime}: {message}&quot;, datefmt=&quot;%X&quot;, style=&quot;{&quot;))
+
+tunnel = Tunnel(3000, log_handlers=[handler])
 </code></pre>
 <h2 id="callback">Callback</h2>
 <p>since version 0.1.0 <code>Tunnel</code> now has 2 callback</p>
@@ -151,7 +163,7 @@ tunnel.add_tunnel(command=..., pattern=..., name=..., callback=regex_callback)
 with tunnel:
     # code goes here
 </code></pre>
-<p>difference between <code>print_callback</code> and <code>regex_callback</code> is</p>
+<p>in code above, difference between <code>print_callback</code> and <code>regex_callback</code> is</p>
 <ul>
 <li><code>print_callback</code> executed after all the URLs is printed. will retrive a list of <code>tuple(url, note)</code></li>
 <li><code>regex_callback</code> executed after regex pattern is matched to URL (before print happen). will retrive <code>url: str</code> and <code>note: str | None</code></li>
@@ -159,7 +171,7 @@ with tunnel:
 <p>example usage is to set callback to send the urls using discord webhook maybe ?</p>
 <h2 id="todo">TODO</h2>
 <ul>
-<li>[ ] -</li>
+<li>[ ] fixing stuff, adding stuff idk</li>
 </ul>
 <h2 id="personal-note">Personal Note</h2>
 <p>well, in 23 Feb 2024, i accidentaly force push to the repo which overwrite the date of the commit</p>
@@ -215,5 +227,5 @@ with tunnel:
 
 <!--
 MkDocs version : 1.5.3
-Build Date UTC : 2024-03-30 20:41:59.304592+00:00
+Build Date UTC : 2024-04-02 09:47:32.075477+00:00
 -->

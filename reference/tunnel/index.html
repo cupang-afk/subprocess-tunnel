@@ -102,7 +102,17 @@
 
 
 </h2>
-
+<div class="doc-signature highlight"><pre><span></span><code><span class="n">Tunnel</span><span class="p">(</span>
+    <span class="n">port</span><span class="p">,</span>
+    <span class="n">check_local_port</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+    <span class="n">debug</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+    <span class="n">timeout</span><span class="o">=</span><span class="mi">60</span><span class="p">,</span>
+    <span class="n">propagate</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+    <span class="n">log_handlers</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+    <span class="n">log_dir</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+    <span class="n">callback</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+<span class="p">)</span>
+</code></pre></div>
 
   <div class="doc doc-contents ">
 
@@ -136,7 +146,7 @@
 )
               –
               <div class="doc-md-description">
-                <p>Flag to check if the local port is available. Default True.</p>
+                <p>Flag to check if the local port is available.</p>
               </div>
             </li>
             <li>
@@ -146,7 +156,7 @@
 )
               –
               <div class="doc-md-description">
-                <p>Flag to enable debug mode for additional output. Default False.</p>
+                <p>Flag to enable debug mode for additional output.</p>
               </div>
             </li>
             <li>
@@ -156,7 +166,7 @@
 )
               –
               <div class="doc-md-description">
-                <p>Maximum time to wait for the tunnels to start. Default 60.</p>
+                <p>Maximum time to wait for the tunnels to start.</p>
               </div>
             </li>
             <li>
@@ -166,27 +176,37 @@
 )
               –
               <div class="doc-md-description">
-                <p>Flag to propagate log messages to the root logger,             if False will create custom log format to print log. Default False.</p>
+                <p>Flag to propagate log messages to the root logger,             if <code>False</code> will create custom log format to print log.</p>
+              </div>
+            </li>
+            <li>
+              <b><code>log_handlers</code></b>
+                  (<code><span title="typing.List">List</span>[<span title="logging.Handler">Handler</span>]</code>, default:
+                      <code>None</code>
+)
+              –
+              <div class="doc-md-description">
+                <p>List of logging handlers to be added to the Tunnel logger.</p>
               </div>
             </li>
             <li>
               <b><code>log_dir</code></b>
-                  (<code>os.<span title="os.PathLike">PathLike</span></code>, default:
+                  (<code><span title="tunnel.StrOrPath">StrOrPath</span></code>, default:
                       <code>None</code>
 )
               –
               <div class="doc-md-description">
-                <p>Directory to store log files. Default os.getcwd().</p>
+                <p>Directory to store tunnel log files. If <code>None</code> it will set to <code>os.get_cwd()</code>.</p>
               </div>
             </li>
             <li>
               <b><code>callback</code></b>
-                  (<code>typing.<span title="typing.Callable">Callable</span>[[list[tuple[str, str | None]]], None]</code>, default:
+                  (<code><span title="typing.Callable">Callable</span>[[<span title="typing.List">List</span>[<span title="typing.Tuple">Tuple</span>[str, <span title="typing.Optional">Optional</span>[str]]]], None]</code>, default:
                       <code>None</code>
 )
               –
               <div class="doc-md-description">
-                <p>A callback function to be called when Tunnel URL is printed.            <code>callback([(url1, note1), (url2, note2), ...]) -&gt; None</code></p>
+                <p>A callback function to be called when Tunnel URL is printed.            will call <code>callback([(url1, note1), (url2, note2), ...]) -&gt; None</code>.</p>
               </div>
             </li>
         </ul>
@@ -194,6 +214,10 @@
     </tr>
   </tbody>
 </table>
+<details class="note" open>
+  <summary>Note</summary>
+  <p>output of each tunnel command will be saved to <code>log_dir</code></p>
+</details>
 
   
 
@@ -222,17 +246,15 @@
 
 </h3>
 <div class="doc-signature highlight"><pre><span></span><code><span class="n">with_tunnel_list</span><span class="p">(</span>
-    <span class="n">port</span><span class="p">:</span> <span class="n">int</span><span class="p">,</span>
-    <span class="n">tunnel_list</span><span class="p">:</span> <span class="n">list</span><span class="p">[</span><span class="n"><a class="autorefs autorefs-internal" href="#tunnel">tunnel</a></span><span class="o">.</span><span class="n"><span title="tunnel.TunnelDict">TunnelDict</span></span><span class="p">],</span>
-    <span class="o">*</span><span class="p">,</span>
-    <span class="n">check_local_port</span><span class="p">:</span> <span class="n">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
-    <span class="n">debug</span><span class="p">:</span> <span class="n">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
-    <span class="n">timeout</span><span class="p">:</span> <span class="n">int</span> <span class="o">=</span> <span class="mi">60</span><span class="p">,</span>
-    <span class="n">propagate</span><span class="p">:</span> <span class="n">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
-    <span class="n">log_dir</span><span class="p">:</span> <span class="n">str</span> <span class="o">|</span> <span class="n">os</span><span class="o">.</span><span class="n"><span title="os.PathLike">PathLike</span></span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-    <span class="n">callback</span><span class="p">:</span> <span class="n">typing</span><span class="o">.</span><span class="n"><span title="typing.Callable">Callable</span></span><span class="p">[</span>
-        <span class="p">[</span><span class="n">list</span><span class="p">[</span><span class="n">tuple</span><span class="p">[</span><span class="n">str</span><span class="p">,</span> <span class="n">str</span> <span class="o">|</span> <span class="kc">None</span><span class="p">]]],</span> <span class="kc">None</span>
-    <span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="n">port</span><span class="p">,</span>
+    <span class="n">tunnel_list</span><span class="p">,</span>
+    <span class="n">check_local_port</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+    <span class="n">debug</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+    <span class="n">timeout</span><span class="o">=</span><span class="mi">60</span><span class="p">,</span>
+    <span class="n">propagate</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+    <span class="n">log_handlers</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+    <span class="n">log_dir</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+    <span class="n">callback</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
 <span class="p">)</span>
 </code></pre></div>
 
@@ -262,7 +284,7 @@
             </li>
             <li>
               <b><code>tunnel_list</code></b>
-                  (<code>list[dict]</code>)
+                  (<code><span title="typing.List">List</span>[dict]</code>)
               –
               <div class="doc-md-description">
                 <p>List of dictionaries specifying tunnel configurations.
@@ -276,7 +298,7 @@ Each dictionary must have the keys <code>command</code>, <code>pattern</code>, <
 )
               –
               <div class="doc-md-description">
-                <p>Flag to check if the local port is available. Default True.</p>
+                <p>Flag to check if the local port is available.</p>
               </div>
             </li>
             <li>
@@ -286,7 +308,7 @@ Each dictionary must have the keys <code>command</code>, <code>pattern</code>, <
 )
               –
               <div class="doc-md-description">
-                <p>Flag to enable debug mode for additional output. Default False.</p>
+                <p>Flag to enable debug mode for additional output.</p>
               </div>
             </li>
             <li>
@@ -296,7 +318,7 @@ Each dictionary must have the keys <code>command</code>, <code>pattern</code>, <
 )
               –
               <div class="doc-md-description">
-                <p>Maximum time to wait for the tunnels to start. Default 60.</p>
+                <p>Maximum time to wait for the tunnels to start.</p>
               </div>
             </li>
             <li>
@@ -306,27 +328,37 @@ Each dictionary must have the keys <code>command</code>, <code>pattern</code>, <
 )
               –
               <div class="doc-md-description">
-                <p>Flag to propagate log messages to the root logger,                 if False will create custom log format to print log. Default False.</p>
+                <p>Flag to propagate log messages to the root logger,                 if <code>False</code> will create custom log format to print log.</p>
+              </div>
+            </li>
+            <li>
+              <b><code>log_handlers</code></b>
+                  (<code><span title="typing.List">List</span>[<span title="logging.Handler">Handler</span>]</code>, default:
+                      <code>None</code>
+)
+              –
+              <div class="doc-md-description">
+                <p>List of logging handlers to be added to the Tunnel logger.</p>
               </div>
             </li>
             <li>
               <b><code>log_dir</code></b>
-                  (<code>os.<span title="os.PathLike">PathLike</span></code>, default:
+                  (<code><span title="tunnel.StrOrPath">StrOrPath</span></code>, default:
                       <code>None</code>
 )
               –
               <div class="doc-md-description">
-                <p>Directory to store log files. Default os.getcwd().</p>
+                <p>Directory to store tunnel log files. If <code>None</code> it will set to <code>os.get_cwd()</code>.</p>
               </div>
             </li>
             <li>
               <b><code>callback</code></b>
-                  (<code>typing.<span title="typing.Callable">Callable</span>[[list[tuple[str, str | None]]], None]</code>, default:
+                  (<code><span title="typing.Callable">Callable</span>[[<span title="typing.List">List</span>[<span title="typing.Tuple">Tuple</span>[str, <span title="typing.Optional">Optional</span>[str]]]], None]</code>, default:
                       <code>None</code>
 )
               –
               <div class="doc-md-description">
-                <p>A callback function to be called when Tunnel URL is printed.                <code>callback([(url1, note1), (url2, note2), ...]) -&gt; None</code></p>
+                <p>A callback function to be called when Tunnel URL is printed.                will call <code>callback([(url1, note1), (url2, note2), ...]) -&gt; None</code>.</p>
               </div>
             </li>
         </ul>
@@ -334,6 +366,34 @@ Each dictionary must have the keys <code>command</code>, <code>pattern</code>, <
     </tr>
   </tbody>
 </table>
+
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+      <th class="field-name">Raises:</th>
+      <td class="field-body">
+        <ul class="first simple">
+            <li>
+                  <code>ValueError</code>
+              –
+              <div class="doc-md-description">
+                <p>Raised if <code>tunnel_list</code> doesn't have dict with keys atleast <code>command</code>, <code>pattern</code>, <code>name</code></p>
+              </div>
+            </li>
+        </ul>
+      </td>
+    </tr>
+  </tbody>
+</table>
+<details class="note" open>
+  <summary>Note</summary>
+  <p>output of each tunnel command will be saved to <code>log_dir</code></p>
+</details>
   </div>
 
 </div>
@@ -349,12 +409,7 @@ Each dictionary must have the keys <code>command</code>, <code>pattern</code>, <
 
 </h3>
 <div class="doc-signature highlight"><pre><span></span><code><span class="n">add_tunnel</span><span class="p">(</span>
-    <span class="o">*</span><span class="p">,</span>
-    <span class="n">command</span><span class="p">:</span> <span class="n">str</span><span class="p">,</span>
-    <span class="n">pattern</span><span class="p">:</span> <span class="n">re</span><span class="o">.</span><span class="n"><span title="re.Pattern">Pattern</span></span> <span class="o">|</span> <span class="n">str</span><span class="p">,</span>
-    <span class="n">name</span><span class="p">:</span> <span class="n">str</span><span class="p">,</span>
-    <span class="n">note</span><span class="p">:</span> <span class="n">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-    <span class="n">callback</span><span class="p">:</span> <span class="n">typing</span><span class="o">.</span><span class="n"><span title="typing.Callable">Callable</span></span><span class="p">[[</span><span class="n">str</span><span class="p">,</span> <span class="n">str</span><span class="p">],</span> <span class="kc">None</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="o">*</span><span class="p">,</span> <span class="n">command</span><span class="p">,</span> <span class="n">pattern</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">note</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">callback</span><span class="o">=</span><span class="kc">None</span>
 <span class="p">)</span>
 </code></pre></div>
 
@@ -384,7 +439,7 @@ Each dictionary must have the keys <code>command</code>, <code>pattern</code>, <
             </li>
             <li>
               <b><code>pattern</code></b>
-                  (<code>re.<span title="re.Pattern">Pattern</span> | str</code>)
+                  (<code><span title="tunnel.StrOrRegexPattern">StrOrRegexPattern</span></code>)
               –
               <div class="doc-md-description">
                 <p>A regular expression pattern to match the tunnel URL.</p>
@@ -400,22 +455,22 @@ Each dictionary must have the keys <code>command</code>, <code>pattern</code>, <
             </li>
             <li>
               <b><code>note</code></b>
-                  (<code>typing.<span title="typing.Optional">Optional</span>[str]</code>, default:
+                  (<code>str</code>, default:
                       <code>None</code>
 )
               –
               <div class="doc-md-description">
-                <p>A note about the tunnel.</p>
+                <p>A note about the tunnel. Defaults to <code>None</code>.</p>
               </div>
             </li>
             <li>
               <b><code>callback</code></b>
-                  (<code>typing.<span title="typing.Callable">Callable</span>[[str, str], None]</code>, default:
+                  (<code><span title="typing.Callable">Callable</span>[[str, str], None]</code>, default:
                       <code>None</code>
 )
               –
               <div class="doc-md-description">
-                <p>A callback function to be called when when the regex pattern matched.                <code>callback(url, note) -&gt; None</code></p>
+                <p>A callback function to be called when when the regex pattern matched.                will call <code>callback(url, note) -&gt; None</code>. Defaults to <code>None</code>.</p>
               </div>
             </li>
         </ul>
@@ -423,6 +478,10 @@ Each dictionary must have the keys <code>command</code>, <code>pattern</code>, <
     </tr>
   </tbody>
 </table>
+<details class="note" open>
+  <summary>Note</summary>
+  <p><code>name</code> must be unique name as is being used for <code>.log</code> file,</p>
+</details>
   </div>
 
 </div>
@@ -460,7 +519,7 @@ Each dictionary must have the keys <code>command</code>, <code>pattern</code>, <
                   <code>RuntimeError</code>
               –
               <div class="doc-md-description">
-                <p>Raise if tunnel is already running</p>
+                <p>Raised if tunnel is already running</p>
               </div>
             </li>
         </ul>
@@ -505,7 +564,7 @@ Each dictionary must have the keys <code>command</code>, <code>pattern</code>, <
                   <code>RuntimeError</code>
               –
               <div class="doc-md-description">
-                <p>Raise if tunnel is not running</p>
+                <p>Raised if tunnel is not running</p>
               </div>
             </li>
         </ul>
@@ -543,8 +602,8 @@ Each dictionary must have the keys <code>command</code>, <code>pattern</code>, <
 
 
 
-<h3 id="tunnel.Tunnel.is_port_available" class="doc doc-heading">
-          <span class="doc doc-object-name doc-function-name">is_port_available</span>
+<h3 id="tunnel.Tunnel.is_port_in_use" class="doc doc-heading">
+          <span class="doc doc-object-name doc-function-name">is_port_in_use</span>
 
   
   <span class="doc doc-labels">
@@ -552,12 +611,12 @@ Each dictionary must have the keys <code>command</code>, <code>pattern</code>, <
   </span>
 
 </h3>
-<div class="doc-signature highlight"><pre><span></span><code><span class="n">is_port_available</span><span class="p">(</span><span class="n">port</span><span class="p">:</span> <span class="n">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">bool</span>
+<div class="doc-signature highlight"><pre><span></span><code><span class="n">is_port_in_use</span><span class="p">(</span><span class="n">port</span><span class="p">)</span>
 </code></pre></div>
 
   <div class="doc doc-contents ">
   
-      <p>Check if the specified port is available.</p>
+      <p>Check if the specified port is in use.</p>
 
 
 
@@ -600,7 +659,7 @@ Each dictionary must have the keys <code>command</code>, <code>pattern</code>, <
 <b><code>bool</code></b>(                <code>bool</code>
 )            –
             <div class="doc-md-description">
-              <p>True if the port is available, False otherwise.</p>
+              <p><code>True</code> if the port is in use, <code>False</code> otherwise.</p>
             </div>
           </li>
       </ul>
@@ -626,12 +685,7 @@ Each dictionary must have the keys <code>command</code>, <code>pattern</code>, <
   </span>
 
 </h3>
-<div class="doc-signature highlight"><pre><span></span><code><span class="n">wait_for_condition</span><span class="p">(</span>
-    <span class="n">condition</span><span class="p">:</span> <span class="n">typing</span><span class="o">.</span><span class="n"><span title="typing.Callable">Callable</span></span><span class="p">[[],</span> <span class="n">bool</span><span class="p">],</span>
-    <span class="o">*</span><span class="p">,</span>
-    <span class="n">interval</span><span class="p">:</span> <span class="n">int</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span>
-    <span class="n">timeout</span><span class="p">:</span> <span class="n">int</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="mi">10</span>
-<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">bool</span>
+<div class="doc-signature highlight"><pre><span></span><code><span class="n">wait_for_condition</span><span class="p">(</span><span class="n">condition</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">interval</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">timeout</span><span class="o">=</span><span class="mi">10</span><span class="p">)</span>
 </code></pre></div>
 
   <div class="doc doc-contents ">
@@ -653,7 +707,7 @@ Each dictionary must have the keys <code>command</code>, <code>pattern</code>, <
         <ul class="first simple">
             <li>
               <b><code>condition</code></b>
-                  (<code>typing.<span title="typing.Callable">Callable</span>[[], bool]</code>)
+                  (<code><span title="typing.Callable">Callable</span>[[], bool]</code>)
               –
               <div class="doc-md-description">
                 <p>The condition to check.</p>
@@ -676,7 +730,7 @@ Each dictionary must have the keys <code>command</code>, <code>pattern</code>, <
 )
               –
               <div class="doc-md-description">
-                <p>Maximum time to wait for the condition. None for no timeout.</p>
+                <p>Maximum time to wait for the condition. <code>None</code> for no timeout.</p>
               </div>
             </li>
         </ul>
@@ -700,7 +754,7 @@ Each dictionary must have the keys <code>command</code>, <code>pattern</code>, <
 <b><code>bool</code></b>(                <code>bool</code>
 )            –
             <div class="doc-md-description">
-              <p>True if the condition is met, False if timeout is reached.</p>
+              <p><code>True</code> if the condition is met, <code>False</code> if timeout is reached.</p>
             </div>
           </li>
       </ul>
