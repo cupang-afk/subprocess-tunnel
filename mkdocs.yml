@@ -15,9 +15,9 @@ plugins:
             show_source: false
             members_order: source
             separate_signature: true
-            show_signature_annotations: true
             signature_crossrefs: true
-            annotations_path: full
+            annotations_path: brief
+            merge_init_into_class: True
 
 theme: readthedocs
 
