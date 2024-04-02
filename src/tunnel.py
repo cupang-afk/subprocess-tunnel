@@ -173,6 +173,21 @@ class Tunnel:
         # compile pattern
         if isinstance(pattern, str):
             pattern = re.compile(pattern)
+
+        log = self.logger
+        log.info(f"Adding tunnel {command=} {pattern=} {name=} {note=} {callback=}")
+        names_lower = [x["name"].lower() for x in self.tunnel_list]
+        counter = 0
+        name_original = name
+        for n in names_lower:
+            if name.lower() == n:
+                counter += 1
+                name = f"{name}_{counter}"
+        if name != name_original:
+            log.warning(
+                f'Name of tunnel command={command} changed from "{name_original}" to "{name}"'
+            )
+            log.warning("The name is being used for .log file so it need to be unique each tunnel")
         self.tunnel_list.append(
             dict(command=command, pattern=pattern, name=name, note=note, callback=callback)
         )
