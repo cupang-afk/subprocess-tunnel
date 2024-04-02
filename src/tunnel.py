@@ -156,7 +156,7 @@ class Tunnel:
         name: str,
         note: str = None,
         callback: Callable[[str, str], None] = None,
-    ):
+    ) -> None:
         """
         Add a tunnel.
 
@@ -175,7 +175,7 @@ class Tunnel:
             dict(command=command, pattern=pattern, name=name, note=note, callback=callback)
         )
 
-    def start(self):
+    def start(self) -> None:
         """
         Start the tunnel and wait for the URLs to be printed.
 
@@ -200,7 +200,7 @@ class Tunnel:
         finally:
             self.check_local_port = _check_local_port
 
-    def stop(self):
+    def stop(self) -> None:
         """
         Stop the tunnel and reset internal state.
 
@@ -268,7 +268,7 @@ class Tunnel:
     def __exit__(self, exc_type, exc_value, exc_tb):
         self.stop()
 
-    def reset(self):
+    def reset(self) -> None:
         """
         Reset internal state.
         """
