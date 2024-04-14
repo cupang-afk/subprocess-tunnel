@@ -1,3 +1,9 @@
+## 0.2.1 (2024-04-14)
+
+### Fix
+
+- **Tunnel**: log callback error when it happen
+
 ## 0.2.0 (2024-04-02)
 
 ### Feat
