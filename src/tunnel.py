@@ -410,7 +410,12 @@ class Tunnel:
                 with self.urls_lock:
                     self.urls.append((link, note))
                 if callback:
-                    callback(link, note)
+                    try:
+                        callback(link, note)
+                    except Exception:
+                        self.logger.error(
+                            "An error occurred while invoking URL callback", exc_info=True
+                        )
                 return True
         return False
 
@@ -504,5 +509,8 @@ class Tunnel:
                 for url, note in self.urls:
                     log.info(f"* Running on: {url}{(' ' + note) if note else ''}")
                 if self.callback:
-                    self.callback(self.urls)
+                    try:
+                        self.callback(self.urls)
+                    except Exception:
+                        log.error("An error occurred while invoking URLs callback", exc_info=True)
             self.printed.set()
