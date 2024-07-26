@@ -35,7 +35,9 @@ class TunnelDict(TypedDict):
     pattern: re.Pattern
     name: str
     note: Optional[str]
-    callback: Optional[Callable[[str, str], None]]  # (url, note) -> None
+    callback: Optional[
+        Callable[[str, Optional[str], Optional[str]], None]
+    ]  # (url, note, name) -> None
 
 
 class Tunnel:
@@ -71,7 +73,7 @@ class Tunnel:
     ):
         self._is_running = False
 
-        self.urls: list[tuple[str, Optional[str]]] = []
+        self.urls: list[tuple[str, Optional[str], Optional[str]]] = []
         self.urls_lock = Lock()
 
         self.jobs: list[Thread] = []
@@ -119,7 +121,9 @@ class Tunnel:
         propagate: bool = False,
         log_handlers: List[logging.Handler] = None,
         log_dir: StrOrPath = None,
-        callback: Callable[[List[Tuple[str, Optional[str]]]], None] = None,
+        callback: Callable[
+            [List[Tuple[str, Optional[str], Optional[str]]]], None
+        ] = None,
     ):
         """
         Create a Tunnel instance with a pre-defined list of tunnels.
@@ -135,8 +139,8 @@ class Tunnel:
                 if `False` will create custom log format to print log.
             log_handlers (List[logging.Handler], optional): List of logging handlers to be added to the Tunnel logger.
             log_dir (StrOrPath, optional): Directory to store tunnel log files. If `None` it will set to `os.get_cwd()`.
-            callback (Callable[[List[Tuple[str, Optional[str]]]], None], optional): A callback function to be called when Tunnel URL is printed.\
-                will call `callback([(url1, note1), (url2, note2), ...]) -> None`.
+            callback (Callable[[List[Tuple[str, Optional[str], Optional[str]]]], None], optional): A callback function to be called when Tunnel URL is printed.\
+                will call `callback([(url1, note1, name1), (url2, note2, name2), ...]) -> None`.
 
         Raises:
             ValueError: Raised if `tunnel_list` doesn't have dict with keys atleast `command`, `pattern`, `name`
@@ -159,7 +163,7 @@ class Tunnel:
                 "  name: str\n"
                 "optional key-value pairs:\n"
                 "  note: str\n"
-                "  callback: Callable[[str, str], None]"
+                "  callback: Callable[[str, str, str], None]"
             )
         init_cls = cls(
             port,
@@ -182,7 +186,7 @@ class Tunnel:
         pattern: StrOrRegexPattern,
         name: str,
         note: str = None,
-        callback: Callable[[str, str], None] = None,
+        callback: Callable[[str, Optional[str], Optional[str]], None] = None,
     ) -> None:
         """
         Add a tunnel.
@@ -192,8 +196,8 @@ class Tunnel:
             pattern (StrOrRegexPattern): A regular expression pattern to match the tunnel URL.
             name (str): The name of the tunnel.
             note (str, optional): A note about the tunnel. Defaults to `None`.
-            callback (Callable[[str, str], None], optional): A callback function to be called when when the regex pattern matched.\
-                will call `callback(url, note) -> None`. Defaults to `None`.
+            callback (Callable[[str, Optional[str], Optional[str]], None], optional): A callback function to be called when when the regex pattern matched.\
+                will call `callback(url, note, name) -> None`. Defaults to `None`.
 
         Note:
             `name` must be unique name as is being used for `.log` file,
@@ -401,6 +405,7 @@ class Tunnel:
         """
         for tunnel in self.tunnel_list:
             note = tunnel.get("note")
+            name = tunnel.get("name")
             callback = tunnel.get("callback")
             regex = tunnel["pattern"]
             matches = regex.search(line)
@@ -408,10 +413,10 @@ class Tunnel:
                 link = matches.group().strip()
                 link = link if link.startswith("http") else "http://" + link
                 with self.urls_lock:
-                    self.urls.append((link, note))
+                    self.urls.append((link, note, name))
                 if callback:
                     try:
-                        callback(link, note)
+                        callback(link, note, name)
                     except Exception:
                         self.logger.error(
                             "An error occurred while invoking URL callback", exc_info=True
@@ -506,7 +511,7 @@ class Tunnel:
         # Print URLs
         if not self.stop_event.is_set():
             with self.urls_lock:
-                for url, note in self.urls:
+                for url, note, _ in self.urls:
                     log.info(f"* Running on: {url}{(' ' + note) if note else ''}")
                 if self.callback:
                     try:

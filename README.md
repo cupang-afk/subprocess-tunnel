@@ -86,10 +86,10 @@ or when adding tunnel `Tunnel.add_tunnel`
 example
 
 ```python
-def print_callback(urls: list[tuple[str, str | None]]) -> None:
+def print_callback(urls: list[tuple[str, str | None, str | None]]) -> None:
     print(urls)
-def regex_callback(url: str, note: str | None) -> None:
-    print(url, note)
+def regex_callback(url: str, note: str | None, name: str | None) -> None:
+    print(url, note, name)
 
 tunnel = Tunnel(3000, callback=print_callback)
 tunnel.add_tunnel(command=..., pattern=..., name=..., callback=regex_callback)
@@ -100,8 +100,8 @@ with tunnel:
 
 in code above, difference between `print_callback` and `regex_callback` is
 
-- `print_callback` executed after all the URLs is printed. will retrive a list of `tuple(url, note)`
-- `regex_callback` executed after regex pattern is matched to URL (before print happen). will retrive `url: str` and `note: str | None`
+- `print_callback` executed after all the URLs is printed. will retrive a list of `tuple(url, note, name)`
+- `regex_callback` executed after regex pattern is matched to URL (before print happen). will retrive `url: str`, `note: str | None` and `name: str | None`
 
 example usage is to set callback to send the urls using discord webhook maybe ?
 
