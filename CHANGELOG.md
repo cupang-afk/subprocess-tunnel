@@ -1,3 +1,13 @@
+## 0.2.2 (2024-07-26)
+
+### Feat
+
+- **Tunnel**: add tunnel name into callback calls
+
+### Fix
+
+- **Tunnel**: ensure typing for python 3.8 support
+
 ## 0.2.1 (2024-04-14)
 
 ### Fix
