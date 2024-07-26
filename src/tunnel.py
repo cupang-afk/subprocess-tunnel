@@ -73,12 +73,12 @@ class Tunnel:
     ):
         self._is_running = False
 
-        self.urls: list[tuple[str, Optional[str], Optional[str]]] = []
+        self.urls: List[Tuple[str, Optional[str], Optional[str]]] = []
         self.urls_lock = Lock()
 
-        self.jobs: list[Thread] = []
-        self.processes: list[subprocess.Popen] = []
-        self.tunnel_list: list[TunnelDict] = []
+        self.jobs: List[Thread] = []
+        self.processes: List[subprocess.Popen] = []
+        self.tunnel_list: List[TunnelDict] = []
 
         self.stop_event: Event = Event()
         self.printed = Event()
