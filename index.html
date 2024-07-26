@@ -152,10 +152,10 @@ tunnel = Tunnel(3000, log_handlers=[handler])
 <p>set it up when initializing <code>Tunnel</code>
 or when adding tunnel <code>Tunnel.add_tunnel</code></p>
 <p>example</p>
-<pre><code class="language-python">def print_callback(urls: list[tuple[str, str | None]]) -&gt; None:
+<pre><code class="language-python">def print_callback(urls: list[tuple[str, str | None, str | None]]) -&gt; None:
     print(urls)
-def regex_callback(url: str, note: str | None) -&gt; None:
-    print(url, note)
+def regex_callback(url: str, note: str | None, name: str | None) -&gt; None:
+    print(url, note, name)
 
 tunnel = Tunnel(3000, callback=print_callback)
 tunnel.add_tunnel(command=..., pattern=..., name=..., callback=regex_callback)
@@ -165,8 +165,8 @@ with tunnel:
 </code></pre>
 <p>in code above, difference between <code>print_callback</code> and <code>regex_callback</code> is</p>
 <ul>
-<li><code>print_callback</code> executed after all the URLs is printed. will retrive a list of <code>tuple(url, note)</code></li>
-<li><code>regex_callback</code> executed after regex pattern is matched to URL (before print happen). will retrive <code>url: str</code> and <code>note: str | None</code></li>
+<li><code>print_callback</code> executed after all the URLs is printed. will retrive a list of <code>tuple(url, note, name)</code></li>
+<li><code>regex_callback</code> executed after regex pattern is matched to URL (before print happen). will retrive <code>url: str</code>, <code>note: str | None</code> and <code>name: str | None</code></li>
 </ul>
 <p>example usage is to set callback to send the urls using discord webhook maybe ?</p>
 <h2 id="todo">TODO</h2>
@@ -227,5 +227,5 @@ with tunnel:
 
 <!--
 MkDocs version : 1.5.3
-Build Date UTC : 2024-04-02 09:47:32.075477+00:00
+Build Date UTC : 2024-07-26 12:39:32.997384+00:00
 -->

@@ -353,12 +353,12 @@ Each dictionary must have the keys <code>command</code>, <code>pattern</code>, <
             </li>
             <li>
               <b><code>callback</code></b>
-                  (<code><span title="typing.Callable">Callable</span>[[<span title="typing.List">List</span>[<span title="typing.Tuple">Tuple</span>[str, <span title="typing.Optional">Optional</span>[str]]]], None]</code>, default:
+                  (<code><span title="typing.Callable">Callable</span>[[<span title="typing.List">List</span>[<span title="typing.Tuple">Tuple</span>[str, <span title="typing.Optional">Optional</span>[str], <span title="typing.Optional">Optional</span>[str]]]], None]</code>, default:
                       <code>None</code>
 )
               –
               <div class="doc-md-description">
-                <p>A callback function to be called when Tunnel URL is printed.                will call <code>callback([(url1, note1), (url2, note2), ...]) -&gt; None</code>.</p>
+                <p>A callback function to be called when Tunnel URL is printed.                will call <code>callback([(url1, note1, name1), (url2, note2, name2), ...]) -&gt; None</code>.</p>
               </div>
             </li>
         </ul>
@@ -465,12 +465,12 @@ Each dictionary must have the keys <code>command</code>, <code>pattern</code>, <
             </li>
             <li>
               <b><code>callback</code></b>
-                  (<code><span title="typing.Callable">Callable</span>[[str, str], None]</code>, default:
+                  (<code><span title="typing.Callable">Callable</span>[[str, <span title="typing.Optional">Optional</span>[str], <span title="typing.Optional">Optional</span>[str]], None]</code>, default:
                       <code>None</code>
 )
               –
               <div class="doc-md-description">
-                <p>A callback function to be called when when the regex pattern matched.                will call <code>callback(url, note) -&gt; None</code>. Defaults to <code>None</code>.</p>
+                <p>A callback function to be called when when the regex pattern matched.                will call <code>callback(url, note, name) -&gt; None</code>. Defaults to <code>None</code>.</p>
               </div>
             </li>
         </ul>
