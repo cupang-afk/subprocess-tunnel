@@ -100,7 +100,9 @@ class Tunnel:
                 handler = logging.StreamHandler()
                 handler.setLevel(self.logger.level)
                 handler.setFormatter(
-                    CustomLogFormat("[{asctime} {levelname}]: {message}", datefmt="%X", style="{")
+                    CustomLogFormat(
+                        "[{asctime} {levelname}]: {message}", datefmt="%X", style="{"
+                    )
                 )
                 self.logger.addHandler(handler)
         if self.log_handlers:
@@ -109,6 +111,7 @@ class Tunnel:
 
         self.WINDOWS = True if os.name == "nt" else False
         self.logger.info("Initializing Tunnel")
+        self.logger.info("Python version " + sys.version)
 
     @classmethod
     def with_tunnel_list(
@@ -216,9 +219,17 @@ class Tunnel:
                 counter += 1
                 name = f"{name_original}_{counter}"
         if name != name_original:
-            log.warning(f'Name of tunnel {command=} changed from "{name_original}" to "{name}"')
+            log.warning(
+                f'Name of tunnel {command=} changed from "{name_original}" to "{name}"'
+            )
         self.tunnel_list.append(
-            dict(command=command, pattern=pattern, name=name, note=note, callback=callback)
+            dict(
+                command=command,
+                pattern=pattern,
+                name=name,
+                note=note,
+                callback=callback,
+            )
         )
 
     def start(self) -> None:
@@ -419,7 +430,8 @@ class Tunnel:
                         callback(link, note, name)
                     except Exception:
                         self.logger.error(
-                            "An error occurred while invoking URL callback", exc_info=True
+                            "An error occurred while invoking URL callback",
+                            exc_info=True,
                         )
                 return True
         return False
@@ -462,7 +474,9 @@ class Tunnel:
                 stdin=subprocess.PIPE,
                 universal_newlines=True,
                 bufsize=1,
-                creationflags=subprocess.CREATE_NEW_PROCESS_GROUP if self.WINDOWS else 0,
+                creationflags=subprocess.CREATE_NEW_PROCESS_GROUP
+                if self.WINDOWS
+                else 0,
             )
             self.processes.append(process)
 
@@ -477,7 +491,9 @@ class Tunnel:
                 log.debug(line.rstrip())
 
         except Exception:
-            log.error(f"An error occurred while running the command: {cmd}", exc_info=True)
+            log.error(
+                f"An error occurred while running the command: {cmd}", exc_info=True
+            )
         finally:
             for handler in log.handlers:
                 handler.close()
@@ -498,7 +514,9 @@ class Tunnel:
                 timeout=None,
             )
             if not self.stop_event.is_set():
-                log.info(f"Port is online, waiting tunnel URLs (timeout: {self.timeout}s)")
+                log.info(
+                    f"Port is online, waiting tunnel URLs (timeout: {self.timeout}s)"
+                )
 
         # Wait until all URLs are available or stop_event is set
         if not self.wait_for_condition(
@@ -517,5 +535,8 @@ class Tunnel:
                     try:
                         self.callback(self.urls)
                     except Exception:
-                        log.error("An error occurred while invoking URLs callback", exc_info=True)
+                        log.error(
+                            "An error occurred while invoking URLs callback",
+                            exc_info=True,
+                        )
             self.printed.set()
