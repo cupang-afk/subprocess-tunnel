@@ -1,3 +1,9 @@
+## 0.2.3 (2024-12-08)
+
+### Fix
+
+- **Tunnel.logger**: fix logging to file
+
 ## 0.2.2 (2024-07-26)
 
 ### Feat
